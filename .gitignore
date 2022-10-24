@@ -38,4 +38,6 @@ out/
 
 
 ./front-end/node_modules/**
-./front-end/static/**
+/front-end/static/**
+/front-end/node_modules/
+/db/data/**
