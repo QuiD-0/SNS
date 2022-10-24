@@ -1,7 +1,11 @@
 package com.quid.sns.user.controller;
 
+import static com.quid.sns.common.Response.success;
+
+import com.quid.sns.common.Response;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
+import com.quid.sns.user.model.UserLoginResponse;
 import com.quid.sns.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -25,8 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody UserLoginRequest userLoginRequest) throws NotFoundException {
-        userService.login(userLoginRequest);
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest)
+        throws NotFoundException {
+        return success(userService.login(userLoginRequest));
     }
 
 }

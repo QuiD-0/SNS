@@ -2,12 +2,15 @@ package com.quid.sns.user.service;
 
 import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
+import com.quid.sns.token.JwtToken;
 import com.quid.sns.user.entity.User;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
+import com.quid.sns.user.model.UserLoginResponse;
 import com.quid.sns.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +23,15 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder encoder;
 
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
     @Override
     @Transactional
     public UserDto join(UserJoinRequest request) {
         userJpaRepository.findByUsername(request.getName())
             .ifPresent((e) -> {
-                throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,
-                    String.format("userName is %s", request.getName()));
+                throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME);
             });
 
         User user = User.builder()
@@ -40,14 +45,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public String login(UserLoginRequest request) {
+    public UserLoginResponse login(UserLoginRequest request) {
         User user = userJpaRepository.findByUsername(request.getName())
-            .orElseThrow(IllegalStateException::new);
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
 
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
         }
 
-        return "";
+        return UserLoginResponse.builder()
+            .token(JwtToken.generateToken(user.getUsername(), secretKey, 259200000)).build();
     }
 }
