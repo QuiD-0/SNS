@@ -12,11 +12,9 @@ public class UserDto {
 
     private String username;
 
-    private String password;
 
     @Builder
-    public UserDto(String username, String password) {
+    public UserDto(String username) {
         this.username = username;
-        this.password = password;
     }
 }

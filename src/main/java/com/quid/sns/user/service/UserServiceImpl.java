@@ -1,12 +1,13 @@
 package com.quid.sns.user.service;
 
+import com.quid.sns.exception.ErrorCode;
+import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.user.entity.User;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
 import com.quid.sns.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +23,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto join(UserJoinRequest request) {
-        userJpaRepository.findByUsername(request.getUserName())
-            .ifPresent((e) -> new IllegalStateException());
+        userJpaRepository.findByUsername(request.getName())
+            .ifPresent((e) -> {
+                throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,
+                    String.format("userName is %s", request.getName()));
+            });
 
         User user = User.builder()
-            .username(request.getUserName())
+            .username(request.getName())
             .password(encoder.encode(request.getPassword()))
             .build();
         userJpaRepository.save(user);
@@ -36,13 +40,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public String login(UserLoginRequest request) throws NotFoundException {
-        User user = userJpaRepository.findByUsername(request.getUserName())
+    public String login(UserLoginRequest request) {
+        User user = userJpaRepository.findByUsername(request.getName())
             .orElseThrow(IllegalStateException::new);
 
-        if (!user.getPassword().equals(encoder.encode(request.getPassword()))) {
-            throw new IllegalStateException();
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+            throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
         }
+
         return "";
     }
 }
