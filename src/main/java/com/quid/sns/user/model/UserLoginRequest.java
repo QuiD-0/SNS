@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserLoginRequest {
 
-    private String username;
+    private String userName;
 
     private String password;
 
     @Builder
-    public UserLoginRequest(String username, String password) {
-        this.username = username;
+    public UserLoginRequest(String userName, String password) {
+        this.userName = userName;
         this.password = password;
     }
 

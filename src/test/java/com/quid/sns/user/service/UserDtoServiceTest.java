@@ -14,7 +14,7 @@ public class UserDtoServiceTest {
     @Test
     public void join_when_user_not_exist() {
         UserJoinRequest request = UserJoinRequest.builder()
-            .username("name").password("password").build();
+            .userName("name").password("password").build();
 
         Assertions.assertDoesNotThrow(() -> {
             userService.join(request);
@@ -24,7 +24,7 @@ public class UserDtoServiceTest {
     @Test
     public void join_when_user_exist() {
         UserJoinRequest request = UserJoinRequest.builder()
-            .username("name").password("password").build();
+            .userName("name").password("password").build();
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.join(request));
     }
@@ -32,7 +32,7 @@ public class UserDtoServiceTest {
     @Test
     public void login_when_user_exist_and_authorized() {
         UserLoginRequest request = UserLoginRequest.builder()
-            .username("name").password("password").build();
+            .userName("name").password("password").build();
 
         Assertions.assertDoesNotThrow(() -> {
             userService.login(request);
@@ -50,7 +50,7 @@ public class UserDtoServiceTest {
     @Test
     public void login_when_password_not_exist() {
         UserLoginRequest request = UserLoginRequest.builder()
-            .username("name").build();
+            .userName("name").build();
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.login(request));
     }

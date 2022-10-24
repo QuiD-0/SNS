@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto join(UserJoinRequest request) {
-        userJpaRepository.findByUsername(request.getUsername())
+        userJpaRepository.findByUsername(request.getUserName())
             .ifPresent((e) -> new IllegalStateException());
 
         User user = User.builder()
-            .username(request.getUsername())
+            .username(request.getUserName())
             .password(encoder.encode(request.getPassword()))
             .build();
         userJpaRepository.save(user);
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public String login(UserLoginRequest request) throws NotFoundException {
-        User user = userJpaRepository.findByUsername(request.getUsername())
+        User user = userJpaRepository.findByUsername(request.getUserName())
             .orElseThrow(IllegalStateException::new);
 
         if (!user.getPassword().equals(encoder.encode(request.getPassword()))) {
