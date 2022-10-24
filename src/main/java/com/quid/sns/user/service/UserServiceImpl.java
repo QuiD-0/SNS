@@ -7,7 +7,9 @@ import com.quid.sns.user.model.UserLoginRequest;
 import com.quid.sns.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,23 +17,30 @@ public class UserServiceImpl implements UserService {
 
     private final UserJpaRepository userJpaRepository;
 
+    private final BCryptPasswordEncoder encoder;
+
     @Override
+    @Transactional
     public UserDto join(UserJoinRequest request) {
         userJpaRepository.findByUsername(request.getUsername())
             .ifPresent((e) -> new IllegalStateException());
 
-        User user = User.builder().build();
+        User user = User.builder()
+            .username(request.getUsername())
+            .password(encoder.encode(request.getPassword()))
+            .build();
         userJpaRepository.save(user);
 
         return user.toUserDto();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String login(UserLoginRequest request) throws NotFoundException {
         User user = userJpaRepository.findByUsername(request.getUsername())
             .orElseThrow(IllegalStateException::new);
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!user.getPassword().equals(encoder.encode(request.getPassword()))) {
             throw new IllegalStateException();
         }
         return "";
