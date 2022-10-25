@@ -22,8 +22,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void create(String title, String body, String userName) {
         User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> new SnsApplicationException(
-                ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
 
         Post post = Post.builder().title(title).body(body).user(user).build();
 
