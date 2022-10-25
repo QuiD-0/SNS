@@ -41,4 +41,4 @@ out/
 /front-end/static/**
 /front-end/node_modules/
 /db/data/**
-/front-end
+/front-end/*
