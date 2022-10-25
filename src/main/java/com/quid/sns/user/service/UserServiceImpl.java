@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto join(UserJoinRequest request) {
-        userJpaRepository.findByUsername(request.getName())
+        userJpaRepository.findByUserName(request.getName())
             .ifPresent((e) -> {
                 throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME);
             });
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserLoginResponse login(UserLoginRequest request) {
-        User user = userJpaRepository.findByUsername(request.getName())
+        User user = userJpaRepository.findByUserName(request.getName())
             .orElseThrow(() -> {
                 throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
             });

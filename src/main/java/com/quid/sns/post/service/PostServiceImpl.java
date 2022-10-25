@@ -21,7 +21,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void create(String title, String body, String userName) {
-        User user = userJpaRepository.findByUsername(userName)
+        User user = userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> new SnsApplicationException(
                 ErrorCode.USER_NOT_FOUND));
 

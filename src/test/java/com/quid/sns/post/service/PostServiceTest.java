@@ -14,15 +14,12 @@ public class PostServiceTest {
 
     @Test
     public void createPost_when_user_exist() {
-        Assertions.assertThrows(SnsApplicationException.class, () -> {
-            postService.create("test", "body", "quid");
-        });
+        Assertions.assertDoesNotThrow(() -> postService.create("test", "body", "quid"));
     }
 
     @Test
     public void createPost_when_user_not_exist() {
-        Assertions.assertThrows(SnsApplicationException.class, () -> {
-            postService.create("test", "body", "user");
-        });
+        Assertions.assertThrows(SnsApplicationException.class,
+            () -> postService.create("test", "body", "user"));
     }
 }
