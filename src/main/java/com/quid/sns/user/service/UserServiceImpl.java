@@ -56,6 +56,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return UserLoginResponse.builder()
-            .token(JwtToken.generateToken(user.getUsername(), secretKey, 259200000)).build();
+            .token(JwtToken.generateToken(user.getUserName(), secretKey, 259200000)).build();
     }
 }
