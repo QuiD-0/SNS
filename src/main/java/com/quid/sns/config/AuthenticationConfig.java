@@ -1,34 +1,34 @@
 package com.quid.sns.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
-public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
+public class AuthenticationConfig {
 
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().regexMatchers("^(?!/api/).*");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .authorizeRequests()
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.authorizeRequests()
             .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
             .antMatchers("/api/*/users/alarm/subscribe/*").permitAll()
             .antMatchers("/api/**").authenticated()
             .anyRequest().permitAll()
-            .and()
-            .sessionManagement()
+            .and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .exceptionHandling();
+            .csrf().disable()
+            .logout().logoutSuccessUrl("/").and()
+            .build();
     }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web -> web.ignoring().regexMatchers("^(?!/api/).*"));
+    }
+
 }
