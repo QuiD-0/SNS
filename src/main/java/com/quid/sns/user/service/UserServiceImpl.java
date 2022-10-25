@@ -3,7 +3,7 @@ package com.quid.sns.user.service;
 import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.token.JwtToken;
-import com.quid.sns.user.entity.User;
+import com.quid.sns.user.User;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
