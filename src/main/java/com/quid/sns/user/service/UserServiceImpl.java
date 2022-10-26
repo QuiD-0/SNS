@@ -58,4 +58,12 @@ public class UserServiceImpl implements UserService {
         return UserLoginResponse.builder()
             .token(JwtToken.generateToken(user.getUserName(), secretKey, 259200000)).build();
     }
+
+    @Override
+    public UserDto loadUserByUsername(String userName) {
+        return userJpaRepository.findByUserName(userName).map(UserDto::fromEntity).orElseThrow(() ->
+            new SnsApplicationException(ErrorCode.USER_NOT_FOUND)
+        );
+    }
+
 }

@@ -11,4 +11,6 @@ public interface UserService {
     UserDto join(UserJoinRequest request);
 
     UserLoginResponse login(UserLoginRequest userLoginRequest) throws NotFoundException;
+
+    UserDto loadUserByUsername(String userName);
 }
