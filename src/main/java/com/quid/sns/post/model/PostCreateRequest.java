@@ -9,5 +9,4 @@ public class PostCreateRequest {
 
     private String body;
 
-    private String userName;
 }
