@@ -8,7 +8,8 @@ import com.quid.sns.post.repository.PostJpaRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +41,32 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
 
-        if(!user.equals(post.getUser())){
+        if (!user.equals(post.getUser())) {
             throw new SnsApplicationException(ErrorCode.USER_NOT_MATCHED);
         }
         post.updatePost(request.getTitle(), request.getBody());
+    }
+
+    @Override
+    public void delete(Long id, String userName) {
+        User user = userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
+
+        if (!user.equals(post.getUser())) {
+            throw new SnsApplicationException(ErrorCode.USER_NOT_MATCHED);
+        }
+
+        postRepository.delete(post);
+
+    }
+
+    @Override
+    public Page<Post> list(Pageable pageable, String name) {
+        userJpaRepository.findByUserName(name)
+            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+        return postRepository.findAll(pageable);
     }
 }
