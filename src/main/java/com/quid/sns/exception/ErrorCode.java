@@ -18,6 +18,7 @@ public enum ErrorCode {
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,
         "Connect to notification occurs error"),
+    USER_NOT_MATCHED(HttpStatus.CONFLICT, "user not matched"),
     ;
 
     private final HttpStatus status;
