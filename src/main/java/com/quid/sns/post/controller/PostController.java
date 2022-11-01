@@ -52,4 +52,10 @@ public class PostController {
         return Response.success(list);
     }
 
+    @GetMapping("/my")
+    public Response<Page<Post>> myList(Pageable pageable, Authentication authentication){
+        Page<Post> list = postService.myFeed(pageable,authentication.getName());
+        return Response.success(list);
+    }
+
 }

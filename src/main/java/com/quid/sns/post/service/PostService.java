@@ -14,4 +14,6 @@ public interface PostService {
     void delete(Long id, String name);
 
     Page<Post> list(Pageable pageable, String name);
+
+    Page<Post> myFeed(Pageable pageable, String name);
 }

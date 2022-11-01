@@ -24,8 +24,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void create(String title, String body, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+        User user = findUserByName(userName);
 
         Post post = Post.builder().title(title).body(body).user(user).build();
 
@@ -35,8 +34,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void modify(Long id, PostModifyRequest request, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+        User user = findUserByName(userName);
 
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
@@ -49,8 +47,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(Long id, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+        User user = findUserByName(userName);
 
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
@@ -65,8 +62,18 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<Post> list(Pageable pageable, String name) {
-        userJpaRepository.findByUserName(name)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+        findUserByName(name);
         return postRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Post> myFeed(Pageable pageable, String name) {
+        User user = findUserByName(name);
+        return postRepository.findByUser(user, pageable);
+    }
+
+    private User findUserByName(String name) {
+        return userJpaRepository.findByUserName(name)
+                .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
     }
 }
