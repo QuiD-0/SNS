@@ -51,16 +51,14 @@ public class LikeServiceImpl implements LikeService {
             });
 
         likeJpaRepository.findByUserAndPost(user, post)
-            .ifPresentOrElse(like -> {
-                likeJpaRepository.delete(like);
-            }, () -> {
+            .ifPresentOrElse(like -> likeJpaRepository.delete(like), () -> {
                 throw new SnsApplicationException(ErrorCode.ALREADY_UNLIKED);
             });
     }
 
     @Override
     public int countLikes(Long postId) {
-        return likeJpaRepository.findAllByPostId(postId).size();
+        return likeJpaRepository.countAllByPostId(postId);
     }
 
 }
