@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,17 +17,22 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @GetMapping("/{postId}/like")
+    @PostMapping("/{postId}/like")
     public Response likePost(@PathVariable(name = "postId") Long postId,
         Authentication authentication) {
         likeService.likePost(postId, authentication.getName());
         return Response.success();
     }
 
-    @GetMapping("/{postId}/unlike")
+    @PostMapping("/{postId}/unlike")
     public Response unlikePost(@PathVariable(name = "postId") Long postId,
         Authentication authentication) {
         likeService.unlikePost(postId, authentication.getName());
         return Response.success();
+    }
+
+    @GetMapping("/{postId}")
+    public Response<Integer> getLikeCount(@PathVariable(name = "postId") Long postId) {
+        return Response.success(likeService.countLikes(postId));
     }
 }

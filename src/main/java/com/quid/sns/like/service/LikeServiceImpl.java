@@ -58,4 +58,9 @@ public class LikeServiceImpl implements LikeService {
             });
     }
 
+    @Override
+    public int countLikes(Long postId) {
+        return likeJpaRepository.findAllByPostId(postId).size();
+    }
+
 }
