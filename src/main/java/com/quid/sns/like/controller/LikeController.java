@@ -16,14 +16,14 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @GetMapping("/like/{postId}")
+    @GetMapping("/{postId}/like")
     public Response likePost(@PathVariable(name = "postId") Long postId,
         Authentication authentication) {
         likeService.likePost(postId, authentication.getName());
         return Response.success();
     }
 
-    @GetMapping("/unlike/{postId}")
+    @GetMapping("/{postId}/unlike")
     public Response unlikePost(@PathVariable(name = "postId") Long postId,
         Authentication authentication) {
         likeService.unlikePost(postId, authentication.getName());
