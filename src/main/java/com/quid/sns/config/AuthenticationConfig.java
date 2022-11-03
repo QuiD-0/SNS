@@ -26,7 +26,7 @@ public class AuthenticationConfig {
         return http.authorizeRequests()
             .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
             .antMatchers("/api/*/users/alarm/subscribe/*").permitAll()
-            .antMatchers("/api/**").authenticated()
+//            .antMatchers("/api/**").authenticated()
             .anyRequest().permitAll()
             .and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

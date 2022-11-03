@@ -16,4 +16,7 @@ public interface PostService {
     Page<Post> list(Pageable pageable, String name);
 
     Page<Post> myFeed(Pageable pageable, String name);
+
+    Page<Post> search(Pageable pageable, String keyword);
+
 }

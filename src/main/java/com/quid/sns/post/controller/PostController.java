@@ -53,8 +53,14 @@ public class PostController {
     }
 
     @GetMapping("/my")
-    public Response<Page<Post>> myList(Pageable pageable, Authentication authentication){
-        Page<Post> list = postService.myFeed(pageable,authentication.getName());
+    public Response<Page<Post>> myList(Pageable pageable, Authentication authentication) {
+        Page<Post> list = postService.myFeed(pageable, authentication.getName());
+        return Response.success(list);
+    }
+
+    @GetMapping("/search")
+    public Response<Page<Post>> search(Pageable pageable, String keyword) {
+        Page<Post> list = postService.search(pageable, keyword);
         return Response.success(list);
     }
 

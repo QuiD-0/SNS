@@ -72,8 +72,13 @@ public class PostServiceImpl implements PostService {
         return postRepository.findByUser(user, pageable);
     }
 
+    @Override
+    public Page<Post> search(Pageable pageable, String keyword) {
+        return postRepository.findByTitleContainingOrBodyContaining(keyword, keyword, pageable);
+    }
+
     private User findUserByName(String name) {
         return userJpaRepository.findByUserName(name)
-                .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
     }
 }
