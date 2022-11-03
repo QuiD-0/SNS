@@ -1,5 +1,6 @@
 package com.quid.sns.user.service;
 
+import com.quid.sns.user.User;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
@@ -12,5 +13,7 @@ public interface UserService {
 
     UserLoginResponse login(UserLoginRequest userLoginRequest) throws NotFoundException;
 
-    UserDto loadUserByUsername(String userName);
+    UserDto findUserDtoByUsername(String userName);
+
+    User findUserByName(String userName);
 }

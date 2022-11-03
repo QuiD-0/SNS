@@ -13,12 +13,14 @@ public enum ErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not founded"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Invalid password"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
-    ALREADY_LIKED_POST(HttpStatus.CONFLICT, "user already like the post"),
+    ALREADY_LIKED_POST(HttpStatus.CONFLICT, "uUser already like the post"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User has invalid permission"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,
         "Connect to notification occurs error"),
-    USER_NOT_MATCHED(HttpStatus.CONFLICT, "user not matched"),
+    USER_NOT_MATCHED(HttpStatus.CONFLICT, "User not matched"),
+    ALREADY_LIKED(HttpStatus.CONFLICT, "Already liked"),
+    ALREADY_UNLIKED(HttpStatus.CONFLICT, "Already unLike"),
     ;
 
     private final HttpStatus status;

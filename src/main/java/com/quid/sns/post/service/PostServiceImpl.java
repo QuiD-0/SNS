@@ -24,8 +24,10 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void create(String title, String body, String userName) {
-        User user = findUserByName(userName);
-
+        User user = userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
         Post post = Post.builder().title(title).body(body).user(user).build();
 
         postRepository.save(post);
@@ -34,7 +36,10 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void modify(Long id, PostModifyRequest request, String userName) {
-        User user = findUserByName(userName);
+        User user = userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
 
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
@@ -47,7 +52,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(Long id, String userName) {
-        User user = findUserByName(userName);
+        User user = userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
 
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
@@ -61,24 +69,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> list(Pageable pageable, String name) {
-        findUserByName(name);
+    public Page<Post> list(Pageable pageable, String userName) {
+        userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
         return postRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Post> myFeed(Pageable pageable, String name) {
-        User user = findUserByName(name);
+    public Page<Post> myFeed(Pageable pageable, String userName) {
+        User user = userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
         return postRepository.findByUser(user, pageable);
     }
 
     @Override
     public Page<Post> search(Pageable pageable, String keyword) {
         return postRepository.findByTitleContainingOrBodyContaining(keyword, keyword, pageable);
-    }
-
-    private User findUserByName(String name) {
-        return userJpaRepository.findByUserName(name)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
     }
 }

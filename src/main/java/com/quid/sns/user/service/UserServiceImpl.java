@@ -60,8 +60,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto loadUserByUsername(String userName) {
+    public UserDto findUserDtoByUsername(String userName) {
         return userJpaRepository.findByUserName(userName).map(UserDto::fromEntity).orElseThrow(() ->
+            new SnsApplicationException(ErrorCode.USER_NOT_FOUND)
+        );
+    }
+
+    @Override
+    public User findUserByName(String userName) {
+        return userJpaRepository.findByUserName(userName).orElseThrow(() ->
             new SnsApplicationException(ErrorCode.USER_NOT_FOUND)
         );
     }
