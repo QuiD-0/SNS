@@ -8,7 +8,7 @@ import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
 import com.quid.sns.user.model.UserLoginResponse;
-import com.quid.sns.user.repository.UserJpaRepository;
+import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder encoder;
 
@@ -29,16 +29,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto join(UserJoinRequest request) {
-        userJpaRepository.findByUserName(request.getName())
-            .ifPresent((e) -> {
-                throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME);
-            });
+        userRepository.checkUserExist(request.getName());
 
         User user = User.builder()
             .username(request.getName())
             .password(encoder.encode(request.getPassword()))
             .build();
-        userJpaRepository.save(user);
+        userRepository.save(user);
 
         return user.toUserDto();
     }
@@ -46,10 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserLoginResponse login(UserLoginRequest request) {
-        User user = userJpaRepository.findByUserName(request.getName())
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
+        User user = userRepository.findByUserNameOrThrow(request.getName());
 
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
@@ -62,17 +56,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto findUserDtoByUsername(String userName) {
-        return userJpaRepository.findByUserName(userName).map(UserDto::fromEntity).orElseThrow(() ->
-            new SnsApplicationException(ErrorCode.USER_NOT_FOUND)
-        );
+        return userRepository.findByUserNameOrThrow(userName).toUserDto();
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findUserByName(String userName) {
-        return userJpaRepository.findByUserName(userName).orElseThrow(() ->
-            new SnsApplicationException(ErrorCode.USER_NOT_FOUND)
-        );
+        return userRepository.findByUserNameOrThrow(userName);
     }
 
 }
