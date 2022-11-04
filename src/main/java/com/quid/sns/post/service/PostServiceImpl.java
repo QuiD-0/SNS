@@ -4,9 +4,9 @@ import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.model.PostModifyRequest;
-import com.quid.sns.post.repository.PostJpaRepository;
+import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
-import com.quid.sns.user.repository.UserJpaRepository;
+import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,17 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-    private final PostJpaRepository postRepository;
+    private final PostRepository postRepository;
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
     public void create(String title, String body, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
+        User user = userRepository.findByUserNameOrThrow(userName);
         Post post = Post.builder().title(title).body(body).user(user).build();
 
         postRepository.save(post);
@@ -36,13 +33,8 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void modify(Long id, PostModifyRequest request, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
-
-        Post post = postRepository.findById(id)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
+        User user = userRepository.findByUserNameOrThrow(userName);
+        Post post = postRepository.findByIdOrThrow(id);
 
         if (!user.equals(post.getUser())) {
             throw new SnsApplicationException(ErrorCode.USER_NOT_MATCHED);
@@ -53,13 +45,8 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void delete(Long id, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
-
-        Post post = postRepository.findById(id)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND));
+        User user = userRepository.findByUserNameOrThrow(userName);
+        Post post = postRepository.findByIdOrThrow(id);
 
         if (!user.equals(post.getUser())) {
             throw new SnsApplicationException(ErrorCode.USER_NOT_MATCHED);
@@ -72,26 +59,20 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Page<Post> list(Pageable pageable, String userName) {
-        userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
+        userRepository.checkUserExist(userName);
         return postRepository.findAll(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Post> myFeed(Pageable pageable, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
+        User user = userRepository.findByUserNameOrThrow(userName);
         return postRepository.findByUser(user, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Post> search(Pageable pageable, String keyword) {
-        return postRepository.findByTitleContainingOrBodyContaining(keyword, keyword, pageable);
+        return postRepository.searchPost(keyword, keyword, pageable);
     }
 }

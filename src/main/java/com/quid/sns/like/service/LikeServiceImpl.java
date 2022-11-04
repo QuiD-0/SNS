@@ -5,9 +5,9 @@ import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.like.Likes;
 import com.quid.sns.like.repository.LikeJpaRepository;
 import com.quid.sns.post.Post;
-import com.quid.sns.post.repository.PostJpaRepository;
+import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
-import com.quid.sns.user.repository.UserJpaRepository;
+import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,21 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
 
-    private final PostJpaRepository postJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final LikeJpaRepository likeJpaRepository;
 
     @Override
     @Transactional
     public void likePost(Long postId, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
-        Post post = postJpaRepository.findById(postId)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.POST_NOT_FOUND);
-            });
+        User user = userRepository.findByUserNameOrThrow(userName);
+        Post post = postRepository.findByIdOrThrow(postId);
 
         likeJpaRepository.findByUserAndPost(user, post)
             .ifPresentOrElse(like -> {
@@ -46,14 +40,8 @@ public class LikeServiceImpl implements LikeService {
     @Override
     @Transactional
     public void unlikePost(Long postId, String userName) {
-        User user = userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
-        Post post = postJpaRepository.findById(postId)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.POST_NOT_FOUND);
-            });
+        User user = userRepository.findByUserNameOrThrow(userName);
+        Post post = postRepository.findByIdOrThrow(postId);
 
         likeJpaRepository.findByUserAndPost(user, post)
             .ifPresentOrElse(like -> likeJpaRepository.delete(like), () -> {
@@ -69,13 +57,10 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Post> getLikedPosts(String name, Pageable pageable) {
-        User user = userJpaRepository.findByUserName(name)
-            .orElseThrow(() -> {
-                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
-            });
+    public Page<Post> getLikedPosts(String userName, Pageable pageable) {
+        User user = userRepository.findByUserNameOrThrow(userName);
 
-        return postJpaRepository.findByUser(user, pageable);
+        return postRepository.findByUser(user, pageable);
     }
 
 }
