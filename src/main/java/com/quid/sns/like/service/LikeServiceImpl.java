@@ -1,9 +1,6 @@
 package com.quid.sns.like.service;
 
-import com.quid.sns.exception.ErrorCode;
-import com.quid.sns.exception.SnsApplicationException;
-import com.quid.sns.like.Likes;
-import com.quid.sns.like.repository.LikeJpaRepository;
+import com.quid.sns.like.repository.LikesRepository;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
@@ -20,7 +17,7 @@ public class LikeServiceImpl implements LikeService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final LikeJpaRepository likeJpaRepository;
+    private final LikesRepository likeRepository;
 
     @Override
     @Transactional
@@ -28,13 +25,7 @@ public class LikeServiceImpl implements LikeService {
         User user = userRepository.findByUserNameOrThrow(userName);
         Post post = postRepository.findByIdOrThrow(postId);
 
-        likeJpaRepository.findByUserAndPost(user, post)
-            .ifPresentOrElse(like -> {
-                throw new SnsApplicationException(ErrorCode.ALREADY_LIKED);
-            }, () -> likeJpaRepository.save(Likes.builder()
-                .user(user)
-                .post(post)
-                .build()));
+        likeRepository.saveOrThrow(user, post);
     }
 
     @Override
@@ -43,16 +34,13 @@ public class LikeServiceImpl implements LikeService {
         User user = userRepository.findByUserNameOrThrow(userName);
         Post post = postRepository.findByIdOrThrow(postId);
 
-        likeJpaRepository.findByUserAndPost(user, post)
-            .ifPresentOrElse(like -> likeJpaRepository.delete(like), () -> {
-                throw new SnsApplicationException(ErrorCode.ALREADY_UNLIKED);
-            });
+        likeRepository.deleteOrThrow(user, post);
     }
 
     @Override
     @Transactional(readOnly = true)
     public int countLikes(Long postId) {
-        return likeJpaRepository.countAllByPostId(postId);
+        return likeRepository.countAllByPostId(postId);
     }
 
     @Override
