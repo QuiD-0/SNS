@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class LikeServiceImpl implements LikeService {
     private final LikeJpaRepository likeJpaRepository;
 
     @Override
+    @Transactional
     public void likePost(Long postId, String userName) {
         User user = userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> {
@@ -42,6 +44,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    @Transactional
     public void unlikePost(Long postId, String userName) {
         User user = userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> {
@@ -59,11 +62,13 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int countLikes(Long postId) {
         return likeJpaRepository.countAllByPostId(postId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> getLikedPosts(String name, Pageable pageable) {
         User user = userJpaRepository.findByUserName(name)
             .orElseThrow(() -> {

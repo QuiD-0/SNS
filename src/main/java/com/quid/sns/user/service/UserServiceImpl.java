@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findUserDtoByUsername(String userName) {
         return userJpaRepository.findByUserName(userName).map(UserDto::fromEntity).orElseThrow(() ->
             new SnsApplicationException(ErrorCode.USER_NOT_FOUND)
@@ -67,6 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserByName(String userName) {
         return userJpaRepository.findByUserName(userName).orElseThrow(() ->
             new SnsApplicationException(ErrorCode.USER_NOT_FOUND)

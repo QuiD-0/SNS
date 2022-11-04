@@ -51,6 +51,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id, String userName) {
         User user = userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> {
@@ -69,6 +70,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> list(Pageable pageable, String userName) {
         userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> {
@@ -78,6 +80,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> myFeed(Pageable pageable, String userName) {
         User user = userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> {
@@ -87,6 +90,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> search(Pageable pageable, String keyword) {
         return postRepository.findByTitleContainingOrBodyContaining(keyword, keyword, pageable);
     }
