@@ -9,6 +9,8 @@ import com.quid.sns.post.repository.PostJpaRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,6 +61,16 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public int countLikes(Long postId) {
         return likeJpaRepository.countAllByPostId(postId);
+    }
+
+    @Override
+    public Page<Post> getLikedPosts(String name, Pageable pageable) {
+        User user = userJpaRepository.findByUserName(name)
+            .orElseThrow(() -> {
+                throw new SnsApplicationException(ErrorCode.USER_NOT_FOUND);
+            });
+
+        return postJpaRepository.findByUser(user, pageable);
     }
 
 }

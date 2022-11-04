@@ -2,7 +2,10 @@ package com.quid.sns.like.controller;
 
 import com.quid.sns.common.Response;
 import com.quid.sns.like.service.LikeService;
+import com.quid.sns.post.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,4 +38,10 @@ public class LikeController {
     public Response<Integer> getLikeCount(@PathVariable(name = "postId") Long postId) {
         return Response.success(likeService.countLikes(postId));
     }
+
+    @GetMapping()
+    public Response<Page<Post>> getLikedPosts(Authentication authentication, Pageable pageable) {
+        return Response.success(likeService.getLikedPosts(authentication.getName(), pageable));
+    }
+
 }
