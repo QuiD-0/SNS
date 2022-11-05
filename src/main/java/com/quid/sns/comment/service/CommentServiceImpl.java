@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
 
     @Override
+    @Transactional
     public void createComment(CommentCreateRequest request, String name, Pageable pageable) {
         User user = userRepository.findByUserNameOrThrow(name);
         Post post = postRepository.findByIdOrThrow(request.getPostId());
@@ -35,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void updateComment(CommentUpdateRequest request, String name, Long postId) {
         User user = userRepository.findByUserNameOrThrow(name);
         Post post = postRepository.findByIdOrThrow(postId);
@@ -44,12 +47,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Comment> getCommentByUser(String userName, Pageable pageable) {
         User user = userRepository.findByUserNameOrThrow(userName);
         return commentRepository.findAllByUser(user, pageable);
     }
 
     @Override
+    @Transactional
     public void deleteComment(Long postId, String name) {
         User user = userRepository.findByUserNameOrThrow(name);
         Post post = postRepository.findByIdOrThrow(postId);
