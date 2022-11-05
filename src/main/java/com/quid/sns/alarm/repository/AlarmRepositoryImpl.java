@@ -17,4 +17,9 @@ public class AlarmRepositoryImpl implements AlarmRepository {
     public Page<Alarm> getAlarmList(User user, Pageable pageable) {
         return alarmJpaRepository.findAllByUser(user, pageable);
     }
+
+    @Override
+    public void save(Alarm alarm) {
+        alarmJpaRepository.save(alarm);
+    }
 }

@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface AlarmRepository {
 
     Page<Alarm> getAlarmList(User user, Pageable pageable);
+
+    void save(Alarm build);
 }
