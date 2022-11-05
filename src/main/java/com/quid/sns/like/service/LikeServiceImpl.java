@@ -1,5 +1,9 @@
 package com.quid.sns.like.service;
 
+import com.quid.sns.alarm.Alarm;
+import com.quid.sns.alarm.model.AlarmArgs;
+import com.quid.sns.alarm.model.AlarmType;
+import com.quid.sns.alarm.repository.AlarmRepository;
 import com.quid.sns.like.repository.LikesRepository;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;
@@ -16,8 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeServiceImpl implements LikeService {
 
     private final PostRepository postRepository;
+
     private final UserRepository userRepository;
+
     private final LikesRepository likeRepository;
+
+    private final AlarmRepository alarmRepository;
 
     @Override
     @Transactional
@@ -26,6 +34,9 @@ public class LikeServiceImpl implements LikeService {
         Post post = postRepository.findByIdOrThrow(postId);
 
         likeRepository.saveOrThrow(user, post);
+        alarmRepository.save(Alarm.builder().user(post.getUser()).type(AlarmType.NEW_LIKE_ON_POST).args(
+                AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
+            .build());
     }
 
     @Override
