@@ -9,6 +9,7 @@ import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,12 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.findByUserAndPostOrThrow(user, post);
         comment.updateComment(request.getContent());
+    }
+
+    @Override
+    public Page<Comment> getCommentByUser(String userName, Pageable pageable) {
+        User user = userRepository.findByUserNameOrThrow(userName);
+        return commentRepository.findAllByUser(user, pageable);
     }
 
 }

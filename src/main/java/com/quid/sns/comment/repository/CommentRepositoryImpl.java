@@ -4,6 +4,8 @@ import com.quid.sns.comment.Comment;
 import com.quid.sns.post.Post;
 import com.quid.sns.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,5 +23,10 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Comment findByUserAndPostOrThrow(User user, Post post) {
         return commentJpaRepository.findByUserAndPost(user, post)
             .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+    }
+
+    @Override
+    public Page<Comment> findAllByUser(User user, Pageable pageable) {
+        return commentJpaRepository.findAllByUser(user, pageable);
     }
 }
