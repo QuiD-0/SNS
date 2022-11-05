@@ -8,7 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +20,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
+@Table(name = "comment", indexes = {
+    @Index(name = "comment_user_id_idx", columnList = "user_id"),
+    @Index(name = "comment_post_id_idx", columnList = "post_id")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 

@@ -8,8 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,9 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
+@Table(name = "post", indexes = {
+    @Index(name = "post_user_id_idx", columnList = "user_id")
+})
 @SQLDelete(sql = "UPDATE \"post\" SET removed_at = NOW() WHERE id=?")
 @Where(clause = "removed_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
