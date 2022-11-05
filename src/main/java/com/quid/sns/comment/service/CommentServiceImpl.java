@@ -4,6 +4,8 @@ import com.quid.sns.comment.Comment;
 import com.quid.sns.comment.model.CommentCreateRequest;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.repository.CommentRepository;
+import com.quid.sns.exception.ErrorCode;
+import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
@@ -36,8 +38,8 @@ public class CommentServiceImpl implements CommentService {
     public void updateComment(CommentUpdateRequest request, String name, Long postId) {
         User user = userRepository.findByUserNameOrThrow(name);
         Post post = postRepository.findByIdOrThrow(postId);
-
         Comment comment = commentRepository.findByUserAndPostOrThrow(user, post);
+
         comment.updateComment(request.getContent());
     }
 
@@ -45,6 +47,15 @@ public class CommentServiceImpl implements CommentService {
     public Page<Comment> getCommentByUser(String userName, Pageable pageable) {
         User user = userRepository.findByUserNameOrThrow(userName);
         return commentRepository.findAllByUser(user, pageable);
+    }
+
+    @Override
+    public void deleteComment(Long postId, String name) {
+        User user = userRepository.findByUserNameOrThrow(name);
+        Post post = postRepository.findByIdOrThrow(postId);
+
+        Comment comment = commentRepository.findByUserAndPostOrThrow(user, post);
+        commentRepository.delete(comment);
     }
 
 }

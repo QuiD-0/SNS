@@ -13,4 +13,6 @@ public interface CommentRepository {
     Comment findByUserAndPostOrThrow(User user, Post post);
 
     Page<Comment> findAllByUser(User user, Pageable pageable);
+
+    void delete(Comment comment);
 }

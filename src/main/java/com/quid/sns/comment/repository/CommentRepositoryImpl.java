@@ -29,4 +29,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Page<Comment> findAllByUser(User user, Pageable pageable) {
         return commentJpaRepository.findAllByUser(user, pageable);
     }
+
+    @Override
+    public void delete(Comment comment) {
+        commentJpaRepository.delete(comment);
+    }
 }

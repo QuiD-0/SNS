@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,11 @@ public class CommentController {
     @GetMapping("/user/{userName}")
     public Page<Comment> getCommentByUser(@PathVariable String userName, Pageable pageable) {
         return commentService.getCommentByUser(userName, pageable);
+    }
+
+    @DeleteMapping("/{postId}")
+    public void deleteComment(@PathVariable Long postId, Authentication authentication) {
+        commentService.deleteComment(postId, authentication.getName());
     }
 
 
