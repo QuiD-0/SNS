@@ -34,4 +34,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     public void delete(Comment comment) {
         commentJpaRepository.delete(comment);
     }
+
+    @Override
+    public void saveById(Long postId, Long userId, String content) {
+        commentJpaRepository.saveById(postId, userId, content);
+    }
 }

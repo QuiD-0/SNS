@@ -43,6 +43,8 @@ public class CommentServiceImpl implements CommentService {
             Alarm.builder().user(post.getUser()).type(AlarmType.NEW_COMMENT_ON_POST).args(
                     AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
                 .build());
+
+        commentRepository.saveById(request.getPostId(), user.getId(), request.getContent());
     }
 
     @Override

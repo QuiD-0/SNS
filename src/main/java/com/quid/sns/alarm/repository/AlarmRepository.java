@@ -8,5 +8,5 @@ public interface AlarmRepository {
 
     Page<Alarm> getAlarmList(Long id, Pageable pageable);
 
-    void save(Alarm build);
+    void save(Alarm alarm);
 }
