@@ -3,11 +3,10 @@ package com.quid.sns.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.quid.sns.user.User;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto implements UserDetails {
 
@@ -30,17 +28,17 @@ public class UserDto implements UserDetails {
     private LocalDateTime updatedAt;
     private LocalDateTime removedAt;
 
-
-    public static UserDto fromEntity(User entity) {
-        return new UserDto(
-            entity.getId(),
-            entity.getUserName(),
-            entity.getPassword(),
-            entity.getRole(),
-            entity.getRegisteredAt(),
-            entity.getUpdatedAt(),
-            entity.getRemovedAt()
-        );
+    @Builder
+    public UserDto(Long id, String username, String password, UserRole role,
+        LocalDateTime registeredAt,
+        LocalDateTime updatedAt, LocalDateTime removedAt) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.registeredAt = registeredAt;
+        this.updatedAt = updatedAt;
+        this.removedAt = removedAt;
     }
 
     @Override

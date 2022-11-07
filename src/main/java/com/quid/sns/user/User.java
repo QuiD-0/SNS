@@ -56,7 +56,9 @@ public class User {
 
     public UserDto toUserDto() {
         return UserDto.builder()
+            .id(id)
             .username(userName)
+            .role(role)
             .build();
     }
 }
