@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface AlarmService {
 
-    Page<Alarm> getAlarmList(String name, Pageable pageable);
+    Page<Alarm> getAlarmList(Long id, Pageable pageable);
 }

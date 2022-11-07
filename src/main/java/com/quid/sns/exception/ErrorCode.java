@@ -21,6 +21,7 @@ public enum ErrorCode {
     USER_NOT_MATCHED(HttpStatus.CONFLICT, "User not matched"),
     ALREADY_LIKED(HttpStatus.CONFLICT, "Already liked"),
     ALREADY_UNLIKED(HttpStatus.CONFLICT, "Already unLike"),
+    ILLEGAL_STATE(HttpStatus.CONFLICT, "Illegal state"),
     ;
 
     private final HttpStatus status;
