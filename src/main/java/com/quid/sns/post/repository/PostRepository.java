@@ -13,9 +13,9 @@ public interface PostRepository {
 
     Post findByIdOrThrow(Long postId);
 
-    void delete(Post post);
-
     Page<Post> findAll(Pageable pageable);
 
     void save(Post post);
+
+    void deleteById(Long id);
 }

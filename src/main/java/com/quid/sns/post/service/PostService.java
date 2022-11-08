@@ -11,7 +11,7 @@ public interface PostService {
 
     void modify(Long id, PostModifyRequest request, String userName);
 
-    void delete(Long id, String name);
+    void delete(Long id, Long userId);
 
     Page<PostDto> list(Pageable pageable, String name);
 

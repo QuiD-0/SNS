@@ -1,10 +1,12 @@
 package com.quid.sns.post.controller;
 
+import com.quid.sns.common.ClassUtils;
 import com.quid.sns.common.Response;
 import com.quid.sns.post.model.PostCreateRequest;
 import com.quid.sns.post.model.PostDto;
 import com.quid.sns.post.model.PostModifyRequest;
 import com.quid.sns.post.service.PostService;
+import com.quid.sns.user.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +44,8 @@ public class PostController {
     @DeleteMapping("/{pk}")
     public Response<Void> delete(@PathVariable(name = "pk") Long id,
         Authentication authentication) {
-        postService.delete(id, authentication.getName());
+        UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
+        postService.delete(id, userDto.getId());
         return Response.success();
     }
 

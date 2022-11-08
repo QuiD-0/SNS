@@ -33,11 +33,6 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public void delete(Post post) {
-        postJpaRepository.delete(post);
-    }
-
-    @Override
     public Page<Post> findAll(Pageable pageable) {
         return postJpaRepository.findAll(pageable);
     }
@@ -45,6 +40,11 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public void save(Post post) {
         postJpaRepository.save(post);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        postJpaRepository.deleteById(id);
     }
 
 

@@ -45,15 +45,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void delete(Long id, String userName) {
-        User user = userRepository.findByUserNameOrThrow(userName);
+    public void delete(Long id, Long userId) {
         Post post = postRepository.findByIdOrThrow(id);
 
-        if (!user.equals(post.getUser())) {
+        if (post.getUser().getId() != userId) {
             throw new SnsApplicationException(ErrorCode.USER_NOT_MATCHED);
         }
 
-        postRepository.delete(post);
+        postRepository.deleteById(id);
 
     }
 
