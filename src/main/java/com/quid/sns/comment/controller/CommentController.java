@@ -30,10 +30,11 @@ public class CommentController {
         commentService.createComment(request, authentication.getName(), pageable);
     }
 
-    @PutMapping("/{postId}")
-    public void updateComment(@RequestBody CommentUpdateRequest request, @PathVariable Long postId,
+    @PutMapping("/{commentId}")
+    public void updateComment(@RequestBody CommentUpdateRequest request,
+        @PathVariable Long commentId,
         Authentication authentication) {
-        commentService.updateComment(request, authentication.getName(), postId);
+        commentService.updateComment(request, authentication.getName(), commentId);
     }
 
     @GetMapping("/user/{userName}")

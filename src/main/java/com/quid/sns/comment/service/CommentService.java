@@ -10,7 +10,7 @@ public interface CommentService {
 
     void createComment(CommentCreateRequest request, String name, Pageable pageable);
 
-    void updateComment(CommentUpdateRequest request, String name, Long postId);
+    void updateComment(CommentUpdateRequest request, String name, Long commentId);
 
     Page<Comment> getCommentByUser(String userName, Pageable pageable);
 

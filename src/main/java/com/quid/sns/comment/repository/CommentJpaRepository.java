@@ -18,7 +18,7 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findAllByUser(User user, Pageable pageable);
 
     @Modifying
-    @Query(value = "insert into Comment (post_id, user_id, content) values (:postId, :userId, :content)", nativeQuery = true)
+    @Query(value = "insert into Comment (post_id, user_id, content, registered_at) values (:postId, :userId, :content, NOW())", nativeQuery = true)
     int saveById(@Param("postId") Long postId, @Param("userId") Long userid,
         @Param("content") String content);
 }

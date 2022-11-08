@@ -36,23 +36,19 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findByUserNameOrThrow(name);
         Post post = postRepository.findByIdOrThrow(request.getPostId());
 
-        commentRepository.save(
-            Comment.builder().content(request.getContent()).user(user).post(post).build());
+        commentRepository.saveById(request.getPostId(), user.getId(), request.getContent());
 
         alarmRepository.save(
             Alarm.builder().user(post.getUser()).type(AlarmType.NEW_COMMENT_ON_POST).args(
                     AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
                 .build());
 
-        commentRepository.saveById(request.getPostId(), user.getId(), request.getContent());
     }
 
     @Override
     @Transactional
-    public void updateComment(CommentUpdateRequest request, String name, Long postId) {
-        User user = userRepository.findByUserNameOrThrow(name);
-        Post post = postRepository.findByIdOrThrow(postId);
-        Comment comment = commentRepository.findByUserAndPostOrThrow(user, post);
+    public void updateComment(CommentUpdateRequest request, String name, Long commentId) {
+        Comment comment = commentRepository.findByIdOrThrow(commentId);
 
         comment.updateComment(request.getContent());
     }

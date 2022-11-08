@@ -15,11 +15,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final CommentJpaRepository commentJpaRepository;
 
     @Override
-    public void save(Comment comment) {
-        commentJpaRepository.save(comment);
-    }
-
-    @Override
     public Comment findByUserAndPostOrThrow(User user, Post post) {
         return commentJpaRepository.findByUserAndPost(user, post)
             .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
@@ -38,5 +33,11 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public void saveById(Long postId, Long userId, String content) {
         commentJpaRepository.saveById(postId, userId, content);
+    }
+
+    @Override
+    public Comment findByIdOrThrow(Long commentId) {
+        return commentJpaRepository.findById(commentId)
+            .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
     }
 }

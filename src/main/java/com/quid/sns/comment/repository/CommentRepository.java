@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentRepository {
 
-    void save(Comment comment);
-
     Comment findByUserAndPostOrThrow(User user, Post post);
 
     Page<Comment> findAllByUser(User user, Pageable pageable);
@@ -17,4 +15,6 @@ public interface CommentRepository {
     void delete(Comment comment);
 
     void saveById(Long id, Long postId, String content);
+
+    Comment findByIdOrThrow(Long commentId);
 }
