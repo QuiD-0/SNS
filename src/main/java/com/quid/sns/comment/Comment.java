@@ -1,5 +1,6 @@
 package com.quid.sns.comment;
 
+import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.post.Post;
 import com.quid.sns.user.User;
 import java.time.LocalDateTime;
@@ -56,5 +57,15 @@ public class Comment {
 
     public void updateComment(String content) {
         this.content = content;
+    }
+
+    public CommentDto toDto() {
+        return CommentDto.builder()
+            .id(id)
+            .content(content)
+            .userName(user.getUserName())
+            .postId(post.getId())
+            .registeredAt(registeredAt)
+            .build();
     }
 }

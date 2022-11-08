@@ -6,6 +6,7 @@ import com.quid.sns.alarm.model.AlarmType;
 import com.quid.sns.alarm.repository.AlarmRepository;
 import com.quid.sns.comment.Comment;
 import com.quid.sns.comment.model.CommentCreateRequest;
+import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.repository.CommentRepository;
 import com.quid.sns.post.Post;
@@ -54,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Comment> getCommentByUser(String userName, Pageable pageable) {
+    public Page<CommentDto> getCommentByUser(String userName, Pageable pageable) {
         User user = userRepository.findByUserNameOrThrow(userName);
         return commentRepository.findAllByUser(user, pageable);
     }

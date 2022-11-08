@@ -1,7 +1,7 @@
 package com.quid.sns.comment.controller;
 
-import com.quid.sns.comment.Comment;
 import com.quid.sns.comment.model.CommentCreateRequest;
+import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.service.CommentService;
 import com.quid.sns.common.ClassUtils;
@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     @GetMapping("/user/{userName}")
-    public Page<Comment> getCommentByUser(@PathVariable String userName, Pageable pageable) {
+    public Page<CommentDto> getCommentByUser(@PathVariable String userName, Pageable pageable) {
         return commentService.getCommentByUser(userName, pageable);
     }
 
