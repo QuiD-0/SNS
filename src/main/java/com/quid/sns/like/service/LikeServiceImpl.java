@@ -6,6 +6,7 @@ import com.quid.sns.alarm.model.AlarmType;
 import com.quid.sns.alarm.repository.AlarmRepository;
 import com.quid.sns.like.repository.LikesRepository;
 import com.quid.sns.post.Post;
+import com.quid.sns.post.model.PostDto;
 import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserRepository;
@@ -34,9 +35,10 @@ public class LikeServiceImpl implements LikeService {
         Post post = postRepository.findByIdOrThrow(postId);
 
         likeRepository.saveOrThrow(user, post);
-        alarmRepository.save(Alarm.builder().user(post.getUser()).type(AlarmType.NEW_LIKE_ON_POST).args(
-                AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
-            .build());
+        alarmRepository.save(
+            Alarm.builder().user(post.getUser()).type(AlarmType.NEW_LIKE_ON_POST).args(
+                    AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
+                .build());
     }
 
     @Override
@@ -56,10 +58,10 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Post> getLikedPosts(String userName, Pageable pageable) {
+    public Page<PostDto> getLikedPosts(String userName, Pageable pageable) {
         User user = userRepository.findByUserNameOrThrow(userName);
 
-        return postRepository.findByUser(user, pageable);
+        return postRepository.findByUser(user, pageable).map(Post::toDto);
     }
 
 }

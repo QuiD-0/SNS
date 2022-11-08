@@ -1,5 +1,6 @@
 package com.quid.sns.post;
 
+import com.quid.sns.post.model.PostDto;
 import com.quid.sns.user.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -62,5 +63,16 @@ public class Post {
     public void updatePost(String title, String body) {
         this.title = title;
         this.body = body;
+    }
+
+    public PostDto toDto() {
+        return PostDto.builder()
+            .id(id)
+            .title(title)
+            .body(body)
+            .userName(user.getUserName())
+            .registeredAt(registeredAt)
+            .updatedAt(updatedAt)
+            .build();
     }
 }

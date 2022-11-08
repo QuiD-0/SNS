@@ -3,6 +3,7 @@ package com.quid.sns.post.service;
 import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.post.Post;
+import com.quid.sns.post.model.PostDto;
 import com.quid.sns.post.model.PostModifyRequest;
 import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
@@ -58,21 +59,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Post> list(Pageable pageable, String userName) {
+    public Page<PostDto> list(Pageable pageable, String userName) {
         userRepository.checkUserExist(userName);
-        return postRepository.findAll(pageable);
+        return postRepository.findAll(pageable).map(Post::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Post> myFeed(Pageable pageable, String userName) {
+    public Page<PostDto> myFeed(Pageable pageable, String userName) {
         User user = userRepository.findByUserNameOrThrow(userName);
-        return postRepository.findByUser(user, pageable);
+        return postRepository.findByUser(user, pageable).map(Post::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Post> search(Pageable pageable, String keyword) {
-        return postRepository.searchPost(keyword, keyword, pageable);
+    public Page<PostDto> search(Pageable pageable, String keyword) {
+        return postRepository.searchPost(keyword, keyword, pageable).map(Post::toDto);
     }
 }

@@ -1,8 +1,8 @@
 package com.quid.sns.post.controller;
 
 import com.quid.sns.common.Response;
-import com.quid.sns.post.Post;
 import com.quid.sns.post.model.PostCreateRequest;
+import com.quid.sns.post.model.PostDto;
 import com.quid.sns.post.model.PostModifyRequest;
 import com.quid.sns.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -47,20 +47,20 @@ public class PostController {
     }
 
     @GetMapping
-    public Response<Page<Post>> list(Pageable pageable, Authentication authentication){
-        Page<Post> list = postService.list(pageable, authentication.getName());
+    public Response<Page<PostDto>> list(Pageable pageable, Authentication authentication) {
+        Page<PostDto> list = postService.list(pageable, authentication.getName());
         return Response.success(list);
     }
 
     @GetMapping("/my")
-    public Response<Page<Post>> myList(Pageable pageable, Authentication authentication) {
-        Page<Post> list = postService.myFeed(pageable, authentication.getName());
+    public Response<Page<PostDto>> myList(Pageable pageable, Authentication authentication) {
+        Page<PostDto> list = postService.myFeed(pageable, authentication.getName());
         return Response.success(list);
     }
 
     @GetMapping("/search")
-    public Response<Page<Post>> search(Pageable pageable, String keyword) {
-        Page<Post> list = postService.search(pageable, keyword);
+    public Response<Page<PostDto>> search(Pageable pageable, String keyword) {
+        Page<PostDto> list = postService.search(pageable, keyword);
         return Response.success(list);
     }
 

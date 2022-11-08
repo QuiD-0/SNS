@@ -1,6 +1,6 @@
 package com.quid.sns.like.service;
 
-import com.quid.sns.post.Post;
+import com.quid.sns.post.model.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,5 +12,5 @@ public interface LikeService {
 
     int countLikes(Long postId);
 
-    Page<Post> getLikedPosts(String name, Pageable pageable);
+    Page<PostDto> getLikedPosts(String name, Pageable pageable);
 }

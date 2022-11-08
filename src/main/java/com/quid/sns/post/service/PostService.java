@@ -1,6 +1,6 @@
 package com.quid.sns.post.service;
 
-import com.quid.sns.post.Post;
+import com.quid.sns.post.model.PostDto;
 import com.quid.sns.post.model.PostModifyRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,10 +13,10 @@ public interface PostService {
 
     void delete(Long id, String name);
 
-    Page<Post> list(Pageable pageable, String name);
+    Page<PostDto> list(Pageable pageable, String name);
 
-    Page<Post> myFeed(Pageable pageable, String name);
+    Page<PostDto> myFeed(Pageable pageable, String name);
 
-    Page<Post> search(Pageable pageable, String keyword);
+    Page<PostDto> search(Pageable pageable, String keyword);
 
 }

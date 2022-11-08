@@ -2,7 +2,7 @@ package com.quid.sns.like.controller;
 
 import com.quid.sns.common.Response;
 import com.quid.sns.like.service.LikeService;
-import com.quid.sns.post.Post;
+import com.quid.sns.post.model.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +40,7 @@ public class LikeController {
     }
 
     @GetMapping()
-    public Response<Page<Post>> getLikedPosts(Authentication authentication, Pageable pageable) {
+    public Response<Page<PostDto>> getLikedPosts(Authentication authentication, Pageable pageable) {
         return Response.success(likeService.getLikedPosts(authentication.getName(), pageable));
     }
 
