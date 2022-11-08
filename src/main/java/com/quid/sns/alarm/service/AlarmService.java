@@ -1,10 +1,10 @@
 package com.quid.sns.alarm.service;
 
-import com.quid.sns.alarm.Alarm;
+import com.quid.sns.alarm.model.AlarmDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AlarmService {
 
-    Page<Alarm> getAlarmList(Long id, Pageable pageable);
+    Page<AlarmDto> getAlarmList(Long id, Pageable pageable);
 }

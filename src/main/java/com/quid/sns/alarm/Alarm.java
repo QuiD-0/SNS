@@ -1,6 +1,7 @@
 package com.quid.sns.alarm;
 
 import com.quid.sns.alarm.model.AlarmArgs;
+import com.quid.sns.alarm.model.AlarmDto;
 import com.quid.sns.alarm.model.AlarmType;
 import com.quid.sns.user.User;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
@@ -67,4 +68,14 @@ public class Alarm {
         this.args = args;
     }
 
+    public AlarmDto toDto() {
+        return AlarmDto.builder()
+            .id(id)
+            .userName(user.getUserName())
+            .type(type)
+            .args(args)
+            .registeredAt(registeredAt)
+            .updatedAt(updatedAt)
+            .build();
+    }
 }

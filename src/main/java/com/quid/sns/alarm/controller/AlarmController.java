@@ -1,6 +1,6 @@
 package com.quid.sns.alarm.controller;
 
-import com.quid.sns.alarm.Alarm;
+import com.quid.sns.alarm.model.AlarmDto;
 import com.quid.sns.alarm.service.AlarmService;
 import com.quid.sns.common.ClassUtils;
 import com.quid.sns.common.Response;
@@ -21,7 +21,7 @@ public class AlarmController {
     private final AlarmService alarmService;
 
     @GetMapping
-    public Response<Page<Alarm>> getAlarmList(Authentication authentication, Pageable pageable) {
+    public Response<Page<AlarmDto>> getAlarmList(Authentication authentication, Pageable pageable) {
         UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
         return Response.success(alarmService.getAlarmList(userDto.getId(), pageable));
     }
