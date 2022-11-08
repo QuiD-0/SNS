@@ -26,8 +26,8 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public void delete(Comment comment) {
-        commentJpaRepository.delete(comment);
+    public void delete(Long commentId) {
+        commentJpaRepository.deleteById(commentId);
     }
 
     @Override

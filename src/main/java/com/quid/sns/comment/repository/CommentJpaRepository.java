@@ -21,4 +21,8 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
     @Query(value = "insert into Comment (post_id, user_id, content, registered_at) values (:postId, :userId, :content, NOW())", nativeQuery = true)
     int saveById(@Param("postId") Long postId, @Param("userId") Long userid,
         @Param("content") String content);
+
+    @Modifying
+    @Query("delete from Comment c where c.id = :commentId")
+    void deleteById(@Param("commentId") Long commentId);
 }

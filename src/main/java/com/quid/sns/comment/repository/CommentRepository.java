@@ -12,7 +12,7 @@ public interface CommentRepository {
 
     Page<Comment> findAllByUser(User user, Pageable pageable);
 
-    void delete(Comment comment);
+    void delete(Long commentId);
 
     void saveById(Long id, Long postId, String content);
 

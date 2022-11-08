@@ -4,6 +4,8 @@ import com.quid.sns.comment.Comment;
 import com.quid.sns.comment.model.CommentCreateRequest;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.service.CommentService;
+import com.quid.sns.common.ClassUtils;
+import com.quid.sns.user.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +29,13 @@ public class CommentController {
     @PostMapping
     public void createComment(@RequestBody CommentCreateRequest request,
         Authentication authentication, Pageable pageable) {
-        commentService.createComment(request, authentication.getName(), pageable);
+        UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
+        commentService.createComment(request, userDto.getId(), pageable);
     }
 
     @PutMapping("/{commentId}")
     public void updateComment(@RequestBody CommentUpdateRequest request,
-        @PathVariable Long commentId,
-        Authentication authentication) {
+        @PathVariable Long commentId, Authentication authentication) {
         commentService.updateComment(request, authentication.getName(), commentId);
     }
 
@@ -42,9 +44,9 @@ public class CommentController {
         return commentService.getCommentByUser(userName, pageable);
     }
 
-    @DeleteMapping("/{postId}")
-    public void deleteComment(@PathVariable Long postId, Authentication authentication) {
-        commentService.deleteComment(postId, authentication.getName());
+    @DeleteMapping("/{commentId}")
+    public void deleteComment(@PathVariable Long commentId, Authentication authentication) {
+        commentService.deleteComment(commentId);
     }
 
 

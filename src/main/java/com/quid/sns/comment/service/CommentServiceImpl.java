@@ -32,15 +32,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void createComment(CommentCreateRequest request, String name, Pageable pageable) {
-        User user = userRepository.findByUserNameOrThrow(name);
+    public void createComment(CommentCreateRequest request, Long userId, Pageable pageable) {
         Post post = postRepository.findByIdOrThrow(request.getPostId());
 
-        commentRepository.saveById(request.getPostId(), user.getId(), request.getContent());
+        commentRepository.saveById(request.getPostId(), userId, request.getContent());
 
         alarmRepository.save(
             Alarm.builder().user(post.getUser()).type(AlarmType.NEW_COMMENT_ON_POST).args(
-                    AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
+                    AlarmArgs.builder().fromUserId(userId).targetId(post.getId()).build())
                 .build());
 
     }
@@ -62,12 +61,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteComment(Long postId, String name) {
-        User user = userRepository.findByUserNameOrThrow(name);
-        Post post = postRepository.findByIdOrThrow(postId);
-
-        Comment comment = commentRepository.findByUserAndPostOrThrow(user, post);
-        commentRepository.delete(comment);
+    public void deleteComment(Long commentId) {
+        commentRepository.delete(commentId);
     }
 
 }
