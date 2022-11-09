@@ -41,12 +41,8 @@ public class PostController {
         return Response.success();
     }
 
-    @DeleteMapping("/{pk}")
-    public Response<Void> delete(@PathVariable(name = "pk") Long id,
-        Authentication authentication) {
-        UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
-        postService.delete(id, userDto.getId());
-        return Response.success();
+    private static UserDto getUserDto(Authentication authentication) {
+        return ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
     }
 
     @GetMapping
@@ -67,4 +63,11 @@ public class PostController {
         return Response.success(list);
     }
 
+    @DeleteMapping("/{pk}")
+    public Response<Void> delete(@PathVariable(name = "pk") Long id,
+        Authentication authentication) {
+        UserDto userDto = getUserDto(authentication);
+        postService.delete(id, userDto.getId());
+        return Response.success();
+    }
 }
