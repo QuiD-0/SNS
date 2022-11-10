@@ -4,6 +4,7 @@ import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.token.JwtToken;
 import com.quid.sns.user.User;
+import com.quid.sns.user.cache.UserCacheRepository;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final UserCacheRepository userCacheRepository;
 
     private final BCryptPasswordEncoder encoder;
 
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
         }
-
+        userCacheRepository.setUser(user.toUserDto());
         return UserLoginResponse.builder()
             .token(JwtToken.generateToken(user.getUserName(), secretKey, 259200000)).build();
     }
@@ -56,7 +59,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto findUserDtoByUsername(String userName) {
-        return userRepository.findByUserNameOrThrow(userName).toUserDto();
+        return userCacheRepository.getUser(userName)
+            .orElseGet(() -> userRepository.findByUserNameOrThrow(userName).toUserDto());
     }
 
     @Override

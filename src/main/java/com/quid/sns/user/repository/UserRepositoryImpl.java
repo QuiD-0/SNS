@@ -2,8 +2,10 @@ package com.quid.sns.user.repository;
 
 import com.quid.sns.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
@@ -12,6 +14,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findByUserNameOrThrow(String userName) {
+        log.info("findByUserNameOrThrow: {}", userName);
         return userJpaRepository.findByUserName(userName)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
