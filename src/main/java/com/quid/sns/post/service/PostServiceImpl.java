@@ -1,5 +1,6 @@
 package com.quid.sns.post.service;
 
+import com.quid.sns.common.RestPage;
 import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.post.Post;
@@ -9,6 +10,7 @@ import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,14 +55,14 @@ public class PostServiceImpl implements PostService {
         }
 
         postRepository.deleteById(id);
-
     }
 
     @Override
+    @Cacheable(value = "postList", key = "{#userName, #pageable.pageNumber, #pageable.pageSize}")
     @Transactional(readOnly = true)
-    public Page<PostDto> list(Pageable pageable, String userName) {
+    public RestPage<PostDto> list(Pageable pageable, String userName) {
         userRepository.findByUserNameOrThrow(userName);
-        return postRepository.findAll(pageable).map(Post::toDto);
+        return new RestPage(postRepository.findAll(pageable).map(Post::toDto));
     }
 
     @Override
