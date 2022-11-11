@@ -20,7 +20,6 @@ public class UserRepositoryImpl implements UserRepository {
     public User findByUserNameOrThrow(String userName) {
         return userCacheRepository.getUser(userName)
             .orElseGet(() -> {
-                log.info("cache miss: {}", userName);
                 User user = userJpaRepository.findByUserName(userName)
                     .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
                 userCacheRepository.setUser(user);
@@ -39,19 +38,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findByIdOrThrow(Long userId) {
-        return userJpaRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-    }
-
-    @Override
     public void checkUserExist(String userName) {
         userCacheRepository.getUser(userName).ifPresentOrElse(
             user -> {
                 throw new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST);
             },
             () -> userJpaRepository.findByUserName(userName).ifPresent(
-                (e) -> new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST))
+                user -> {
+                    throw new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST);
+                }
+            )
         );
 
     }

@@ -10,7 +10,5 @@ public interface UserRepository {
 
     void delete(User user);
 
-    User findByIdOrThrow(Long userId);
-
     void checkUserExist(String userName);
 }

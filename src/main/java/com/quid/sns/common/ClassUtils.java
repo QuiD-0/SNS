@@ -6,9 +6,6 @@ import com.quid.sns.exception.SnsApplicationException;
 public class ClassUtils {
 
     public static <T> T castInstance(Object obj, Class<T> clazz) {
-        if (obj == null) {
-            return null;
-        }
         if (clazz.isInstance(obj)) {
             return clazz.cast(obj);
         }

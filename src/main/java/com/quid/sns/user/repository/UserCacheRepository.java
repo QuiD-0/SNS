@@ -29,9 +29,13 @@ public class UserCacheRepository {
 
     public Optional<User> getUser(String username) {
         String key = getKey(username);
-        log.info("getUser: {}", key);
+        Object user = redisTemplate.opsForValue().get(key);
+        if (user == null) {
+            log.info("cache miss: {}", username);
+            return Optional.empty();
+        }
+        log.info("cache hit: {}", username);
         return Optional.ofNullable(castInstance(redisTemplate.opsForValue().get(key),
             User.class));
     }
-
 }
