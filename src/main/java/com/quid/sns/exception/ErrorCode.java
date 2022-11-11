@@ -22,6 +22,7 @@ public enum ErrorCode {
     ALREADY_LIKED(HttpStatus.CONFLICT, "Already liked"),
     ALREADY_UNLIKED(HttpStatus.CONFLICT, "Already unLike"),
     ILLEGAL_STATE(HttpStatus.CONFLICT, "Illegal state"),
+    USER_ALREADY_EXIST(HttpStatus.CONFLICT, "User already exist"),
     ;
 
     private final HttpStatus status;

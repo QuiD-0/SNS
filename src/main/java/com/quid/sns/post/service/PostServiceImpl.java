@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Page<PostDto> list(Pageable pageable, String userName) {
-        userRepository.checkUserExist(userName);
+        userRepository.findByUserNameOrThrow(userName);
         return postRepository.findAll(pageable).map(Post::toDto);
     }
 

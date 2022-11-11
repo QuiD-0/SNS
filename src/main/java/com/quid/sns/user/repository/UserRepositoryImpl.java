@@ -46,8 +46,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void checkUserExist(String userName) {
-        userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userCacheRepository.getUser(userName).ifPresentOrElse(
+            user -> {
+                throw new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST);
+            },
+            () -> userJpaRepository.findByUserName(userName).ifPresent(
+                (e) -> new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST))
+        );
+
     }
 }
 

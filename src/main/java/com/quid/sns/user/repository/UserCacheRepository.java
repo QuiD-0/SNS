@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserCacheRepository {
 
-    private final static Duration USER_CACHE_TTL = Duration.ofDays(3);
+    private final static Duration USER_CACHE_TTL = Duration.ofDays(1);
     private final RedisTemplate<String, Object> redisTemplate;
 
     private static String getKey(String username) {
