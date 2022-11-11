@@ -34,10 +34,8 @@ public class UserServiceImpl implements UserService {
     public UserDto join(UserJoinRequest request) {
         userRepository.checkUserExist(request.getName());
 
-        User user = User.builder()
-            .username(request.getName())
-            .password(encoder.encode(request.getPassword()))
-            .build();
+        User user = User.builder().username(request.getName())
+            .password(encoder.encode(request.getPassword())).build();
         userRepository.save(user);
 
         return user.toUserDto();

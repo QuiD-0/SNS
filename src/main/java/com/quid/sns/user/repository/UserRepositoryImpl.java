@@ -18,13 +18,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findByUserNameOrThrow(String userName) {
-        return userCacheRepository.getUser(userName)
-            .orElseGet(() -> {
-                User user = userJpaRepository.findByUserName(userName)
-                    .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
-                userCacheRepository.setUser(user);
-                return user;
-            });
+        return userCacheRepository.getUser(userName).orElseGet(() -> {
+            User user = userJpaRepository.findByUserName(userName)
+                .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+            userCacheRepository.setUser(user);
+            return user;
+        });
     }
 
     @Override
@@ -39,8 +38,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void checkUserExist(String userName) {
-        User user = userCacheRepository.getUser(userName).orElseGet(
-            () -> userJpaRepository.findByUserName(userName).orElseGet(null));
+        User user = userCacheRepository.getUser(userName)
+            .orElseGet(() -> userJpaRepository.findByUserName(userName).orElseGet(null));
 
         if (user != null) {
             throw new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST);
