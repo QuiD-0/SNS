@@ -1,8 +1,8 @@
 package com.quid.sns.user;
 
+import com.quid.sns.common.BaseEntity;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserRole;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,9 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 @Entity
@@ -26,7 +24,7 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE \"user\" SET removed_at = NOW() WHERE id=?")
 @Where(clause = "removed_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,14 +38,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
-    @CreationTimestamp
-    private LocalDateTime registeredAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime removedAt;
-
     @Builder
     public User(String username, String password) {
         this.userName = username;
@@ -59,9 +49,9 @@ public class User {
             .id(id)
             .username(userName)
             .role(role)
-            .registeredAt(registeredAt)
-            .updatedAt(updatedAt)
-            .removedAt(removedAt)
+            .registeredAt(this.getRegisteredAt())
+            .updatedAt(this.getUpdatedAt())
+            .removedAt(this.getRemovedAt())
             .build();
     }
 }

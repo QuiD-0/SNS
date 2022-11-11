@@ -1,9 +1,9 @@
 package com.quid.sns.comment;
 
 import com.quid.sns.comment.model.CommentDto;
+import com.quid.sns.common.BaseEntity;
 import com.quid.sns.post.Post;
 import com.quid.sns.user.User;
-import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,8 +16,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -26,7 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
     @Index(name = "comment_post_id_idx", columnList = "post_id")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,13 +38,6 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @CreationTimestamp
-    private LocalDateTime registeredAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime removedAt;
 
     @Builder
     public Comment(User user, String content, Post post) {
@@ -65,7 +56,7 @@ public class Comment {
             .content(content)
             .userName(user.getUserName())
             .postId(post.getId())
-            .registeredAt(registeredAt)
+            .registeredAt(this.getRegisteredAt())
             .build();
     }
 }

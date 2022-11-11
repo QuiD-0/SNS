@@ -3,10 +3,7 @@ package com.quid.sns.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.quid.sns.common.BaseEntity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -19,39 +16,24 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDto implements UserDetails {
+public class UserDto extends BaseEntity implements UserDetails {
 
     private Long id;
     private String username;
     private String password;
     private UserRole role;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime registeredAt;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime updatedAt;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime removedAt;
-
     @Builder
     public UserDto(Long id, String username, String password, UserRole role,
         LocalDateTime registeredAt,
         LocalDateTime updatedAt, LocalDateTime removedAt) {
+        super(registeredAt, updatedAt, removedAt);
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.registeredAt = registeredAt;
-        this.updatedAt = updatedAt;
-        this.removedAt = removedAt;
     }
 
     @Override
@@ -63,24 +45,24 @@ public class UserDto implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isAccountNonExpired() {
-        return removedAt == null;
+        return super.getRemovedAt() == null;
     }
 
     @Override
     @JsonIgnore
     public boolean isAccountNonLocked() {
-        return removedAt == null;
+        return super.getRemovedAt() == null;
     }
 
     @Override
     @JsonIgnore
     public boolean isCredentialsNonExpired() {
-        return removedAt == null;
+        return super.getRemovedAt() == null;
     }
 
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return removedAt == null;
+        return super.getRemovedAt() == null;
     }
 }

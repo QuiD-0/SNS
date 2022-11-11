@@ -1,8 +1,8 @@
 package com.quid.sns.like;
 
+import com.quid.sns.common.BaseEntity;
 import com.quid.sns.post.Post;
 import com.quid.sns.user.User;
-import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,8 +16,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -26,7 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
     @Index(name = "like_post_id_idx", columnList = "post_id")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Likes {
+public class Likes extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,13 +38,6 @@ public class Likes {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @CreationTimestamp
-    private LocalDateTime registeredAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime removedAt;
 
     @Builder
     public Likes(User user, Post post) {

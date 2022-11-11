@@ -3,9 +3,9 @@ package com.quid.sns.alarm;
 import com.quid.sns.alarm.model.AlarmArgs;
 import com.quid.sns.alarm.model.AlarmDto;
 import com.quid.sns.alarm.model.AlarmType;
+import com.quid.sns.common.BaseEntity;
 import com.quid.sns.user.User;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -23,10 +23,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -35,7 +33,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 })
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Alarm {
+public class Alarm extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,13 +51,6 @@ public class Alarm {
     @Column(columnDefinition = "json")
     private AlarmArgs args;
 
-    @CreationTimestamp
-    private LocalDateTime registeredAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime removedAt;
 
     @Builder
     public Alarm(User user, AlarmType type, AlarmArgs args) {
@@ -74,8 +65,8 @@ public class Alarm {
             .userName(user.getUserName())
             .type(type)
             .args(args)
-            .registeredAt(registeredAt)
-            .updatedAt(updatedAt)
+            .registeredAt(this.getRegisteredAt())
+            .updatedAt(this.getUpdatedAt())
             .build();
     }
 }
