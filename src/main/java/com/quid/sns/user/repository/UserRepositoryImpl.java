@@ -34,6 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void delete(User user) {
         userJpaRepository.delete(user);
+        userCacheRepository.deleteUser(user.getUserName());
     }
 
     @Override

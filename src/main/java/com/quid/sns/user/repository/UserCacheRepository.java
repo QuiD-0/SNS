@@ -38,4 +38,9 @@ public class UserCacheRepository {
         return Optional.ofNullable(castInstance(redisTemplate.opsForValue().get(key),
             User.class));
     }
+
+    public void deleteUser(String username) {
+        String key = getKey(username);
+        redisTemplate.delete(key);
+    }
 }
