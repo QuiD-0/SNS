@@ -59,6 +59,9 @@ public class User {
             .id(id)
             .username(userName)
             .role(role)
+            .registeredAt(registeredAt)
+            .updatedAt(updatedAt)
+            .removedAt(removedAt)
             .build();
     }
 }
