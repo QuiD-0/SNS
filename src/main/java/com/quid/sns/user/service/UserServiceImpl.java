@@ -8,7 +8,6 @@ import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
 import com.quid.sns.user.model.UserLoginResponse;
-import com.quid.sns.user.repository.UserCacheRepository;
 import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    private final UserCacheRepository userCacheRepository;
-
     private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.secret-key}")
