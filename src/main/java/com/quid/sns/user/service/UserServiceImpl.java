@@ -4,11 +4,11 @@ import com.quid.sns.exception.ErrorCode;
 import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.token.JwtToken;
 import com.quid.sns.user.User;
-import com.quid.sns.user.cache.UserCacheRepository;
 import com.quid.sns.user.model.UserDto;
 import com.quid.sns.user.model.UserJoinRequest;
 import com.quid.sns.user.model.UserLoginRequest;
 import com.quid.sns.user.model.UserLoginResponse;
+import com.quid.sns.user.repository.UserCacheRepository;
 import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,22 +51,9 @@ public class UserServiceImpl implements UserService {
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
         }
-        userCacheRepository.setUser(user.toUserDto());
         return UserLoginResponse.builder()
             .token(JwtToken.generateToken(user.getUserName(), secretKey, 259200000)).build();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserDto findUserDtoByUsername(String userName) {
-        return userCacheRepository.getUser(userName)
-            .orElseGet(() -> userRepository.findByUserNameOrThrow(userName).toUserDto());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User findUserByName(String userName) {
-        return userRepository.findByUserNameOrThrow(userName);
-    }
 
 }

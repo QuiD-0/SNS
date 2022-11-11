@@ -1,7 +1,7 @@
 package com.quid.sns.config;
 
 import com.quid.sns.config.filter.JwtTokenFilter;
-import com.quid.sns.user.service.UserService;
+import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class AuthenticationConfig {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -34,7 +34,7 @@ public class AuthenticationConfig {
             .csrf().disable()
             .exceptionHandling()
             .and()
-            .addFilterBefore(new JwtTokenFilter(userService, secretKey),
+            .addFilterBefore(new JwtTokenFilter(userRepository, secretKey),
                 UsernamePasswordAuthenticationFilter.class)
             .logout().logoutSuccessUrl("/").and()
             .build();

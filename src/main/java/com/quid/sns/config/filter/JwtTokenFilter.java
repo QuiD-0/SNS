@@ -2,7 +2,7 @@ package com.quid.sns.config.filter;
 
 import com.quid.sns.token.JwtTokenUtils;
 import com.quid.sns.user.model.UserDto;
-import com.quid.sns.user.service.UserService;
+import com.quid.sns.user.repository.UserRepository;
 import io.jsonwebtoken.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private final String secretKey;
 
@@ -42,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
             String userName = JwtTokenUtils.getUsername(token, secretKey);
-            UserDto userDetails = userService.findUserDtoByUsername(userName);
+            UserDto userDetails = userRepository.findByUserNameOrThrow(userName).toUserDto();
             if (!JwtTokenUtils.validate(token, userDetails.getUsername(), secretKey)) {
                 chain.doFilter(request, response);
                 return;

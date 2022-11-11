@@ -1,8 +1,8 @@
-package com.quid.sns.user.cache;
+package com.quid.sns.user.repository;
 
 import static com.quid.sns.common.ClassUtils.castInstance;
 
-import com.quid.sns.user.model.UserDto;
+import com.quid.sns.user.User;
 import java.time.Duration;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +22,16 @@ public class UserCacheRepository {
         return "user:" + username;
     }
 
-    public void setUser(UserDto user) {
-        String key = getKey(user.getUsername());
+    public void setUser(User user) {
+        String key = getKey(user.getUserName());
         redisTemplate.opsForValue().set(key, user, USER_CACHE_TTL);
     }
 
-    public Optional<UserDto> getUser(String username) {
+    public Optional<User> getUser(String username) {
         String key = getKey(username);
         log.info("getUser: {}", key);
         return Optional.ofNullable(castInstance(redisTemplate.opsForValue().get(key),
-            UserDto.class));
+            User.class));
     }
 
 }
