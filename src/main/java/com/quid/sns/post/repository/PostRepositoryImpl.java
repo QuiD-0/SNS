@@ -20,8 +20,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Page<Post> searchPost(String keyword1, String keyword2,
-        Pageable pageable) {
+    public Page<Post> searchPost(String keyword1, String keyword2, Pageable pageable) {
         return postJpaRepository.findByTitleContainingOrBodyContaining(keyword1, keyword2,
             pageable);
     }

@@ -58,23 +58,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Cacheable(value = "postList", key = "{#userName, #pageable.pageNumber, #pageable.pageSize}")
     @Transactional(readOnly = true)
-    public RestPage<PostDto> list(Pageable pageable, String userName) {
+    @Cacheable(value = "postList", key = "{#userName, #pageable.pageNumber, #pageable.pageSize}")
+    public Page<PostDto> list(Pageable pageable, String userName) {
         userRepository.findByUserNameOrThrow(userName);
         return new RestPage(postRepository.findAll(pageable).map(Post::toDto));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "postByUser", key = "#user.id, #pageable.pageNumber, #pageable.pageSize")
     public Page<PostDto> myFeed(Pageable pageable, String userName) {
         User user = userRepository.findByUserNameOrThrow(userName);
-        return postRepository.findByUser(user, pageable).map(Post::toDto);
+        return new RestPage(postRepository.findByUser(user, pageable).map(Post::toDto));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "postSearch", key = "{#keyword, #pageable.pageNumber, #pageable.pageSize}")
     public Page<PostDto> search(Pageable pageable, String keyword) {
-        return postRepository.searchPost(keyword, keyword, pageable).map(Post::toDto);
+        return new RestPage(postRepository.searchPost(keyword, keyword, pageable).map(Post::toDto));
     }
 }
