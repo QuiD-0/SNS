@@ -5,6 +5,8 @@ import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -14,16 +16,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
 
-    private final UserCacheRepository userCacheRepository;
-
     @Override
+    @Cacheable(value = "user", key = "#userName")
     public User findByUserNameOrThrow(String userName) {
-        return userCacheRepository.getUser(userName).orElseGet(() -> {
-            User user = userJpaRepository.findByUserName(userName)
-                .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
-            userCacheRepository.setUser(user);
-            return user;
-        });
+        return userJpaRepository.findByUserName(userName)
+            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
@@ -32,19 +29,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @CacheEvict(value = "user", key = "#userName")
     public void delete(User user) {
         userJpaRepository.delete(user);
-        userCacheRepository.deleteUser(user.getUserName());
     }
 
     @Override
     public void checkUserExist(String userName) {
-        User user = userCacheRepository.getUser(userName)
-            .orElseGet(() -> userJpaRepository.findByUserName(userName).orElseGet(null));
-
-        if (user != null) {
+        userJpaRepository.findByUserName(userName).ifPresent(user -> {
             throw new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST);
-        }
+        });
     }
 }
 

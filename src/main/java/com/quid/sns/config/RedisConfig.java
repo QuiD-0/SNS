@@ -55,7 +55,7 @@ public class RedisConfig {
     }
 
     private RedisCacheConfiguration defaultCacheConfiguration() {
-        return RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1))
+        return RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(5))
             .serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
             .serializeValuesWith(
                 SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
@@ -64,7 +64,9 @@ public class RedisConfig {
     private Map<String, RedisCacheConfiguration> customCacheConfiguration() {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
         cacheConfigurations.put("postList",
-            defaultCacheConfiguration().entryTtl(Duration.ofMinutes(5)));
+            defaultCacheConfiguration().entryTtl(Duration.ofMinutes(1)));
+        cacheConfigurations.put("user",
+            defaultCacheConfiguration().entryTtl(Duration.ofMinutes(10)));
         return cacheConfigurations;
     }
 
