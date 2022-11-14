@@ -1,5 +1,6 @@
 package com.quid.sns.alarm.service;
 
+import com.quid.sns.alarm.Alarm;
 import com.quid.sns.alarm.model.AlarmDto;
 import com.quid.sns.alarm.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,7 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     public Page<AlarmDto> getAlarmList(Long id, Pageable pageable) {
-
-        return alarmRepository.getAlarmList(id, pageable);
+        return alarmRepository.getAlarmList(id, pageable).map(Alarm::toDto);
     }
 
 }

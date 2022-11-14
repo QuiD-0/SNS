@@ -1,7 +1,6 @@
 package com.quid.sns.comment.repository;
 
 import com.quid.sns.comment.Comment;
-import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.post.Post;
 import com.quid.sns.user.User;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,8 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public Page<CommentDto> findAllByUser(User user, Pageable pageable) {
-        return commentJpaRepository.findAllByUser(user, pageable).map(Comment::toDto);
+    public Page<Comment> findAllByUser(User user, Pageable pageable) {
+        return commentJpaRepository.findAllByUser(user, pageable);
     }
 
     @Override

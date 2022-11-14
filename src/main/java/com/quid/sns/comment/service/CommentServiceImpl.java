@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public Page<CommentDto> getCommentByUser(String userName, Pageable pageable) {
         User user = userRepository.findByUserNameOrThrow(userName);
-        return commentRepository.findAllByUser(user, pageable);
+        return commentRepository.findAllByUser(user, pageable).map(Comment::toDto);
     }
 
     @Override
