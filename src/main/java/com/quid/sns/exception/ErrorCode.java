@@ -23,6 +23,7 @@ public enum ErrorCode {
     ALREADY_UNLIKED(HttpStatus.CONFLICT, "Already unLike"),
     ILLEGAL_STATE(HttpStatus.CONFLICT, "Illegal state"),
     USER_ALREADY_EXIST(HttpStatus.CONFLICT, "User already exist"),
+    ALARM_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Alarm Connect Error"),
     ;
 
     private final HttpStatus status;
