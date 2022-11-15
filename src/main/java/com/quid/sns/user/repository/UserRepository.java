@@ -11,4 +11,6 @@ public interface UserRepository {
     void delete(User user);
 
     void checkUserExist(String userName);
+
+    User findById(Long id);
 }

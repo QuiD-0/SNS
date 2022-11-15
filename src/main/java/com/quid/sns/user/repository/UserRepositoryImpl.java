@@ -40,5 +40,10 @@ public class UserRepositoryImpl implements UserRepository {
             throw new SnsApplicationException(ErrorCode.USER_ALREADY_EXIST);
         });
     }
+
+    @Override
+    public User findById(Long id) {
+        return userJpaRepository.getById(id);
+    }
 }
 

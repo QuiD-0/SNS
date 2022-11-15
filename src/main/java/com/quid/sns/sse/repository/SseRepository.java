@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Slf4j
 @Repository
-public class EmitterRepository {
+public class SseRepository {
 
     private Map<String, SseEmitter> emitterMap = new HashMap<>();
 

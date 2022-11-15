@@ -12,6 +12,7 @@ import com.quid.sns.comment.repository.CommentRepository;
 import com.quid.sns.common.RestPage;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;
+import com.quid.sns.sse.repository.SseRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
 
     private final AlarmRepository alarmRepository;
+
+    private final SseRepository sseRepository;
 
     @Override
     @Transactional
