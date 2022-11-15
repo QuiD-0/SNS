@@ -9,11 +9,13 @@ import com.quid.sns.comment.model.CommentCreateRequest;
 import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.repository.CommentRepository;
+import com.quid.sns.common.RestPage;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
 import com.quid.sns.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -67,8 +69,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "PostCommentList", key = "#postId")
     public Page<CommentDto> getCommentByPost(Long postId, Pageable pageable) {
-        return commentRepository.findAllByPostId(postId, pageable).map(Comment::toDto);
+        return new RestPage(
+            commentRepository.findAllByPostId(postId, pageable).map(Comment::toDto));
     }
 
 }
