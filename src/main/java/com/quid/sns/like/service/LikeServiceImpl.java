@@ -1,9 +1,10 @@
 package com.quid.sns.like.service;
 
-import com.quid.sns.alarm.Alarm;
 import com.quid.sns.alarm.model.AlarmArgs;
 import com.quid.sns.alarm.model.AlarmType;
 import com.quid.sns.alarm.repository.AlarmRepository;
+import com.quid.sns.kafka.model.AlarmEvent;
+import com.quid.sns.kafka.producer.AlarmProducer;
 import com.quid.sns.like.repository.LikesRepository;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.model.PostDto;
@@ -28,6 +29,8 @@ public class LikeServiceImpl implements LikeService {
 
     private final AlarmRepository alarmRepository;
 
+    private final AlarmProducer alarmProducer;
+
     @Override
     @Transactional
     public void likePost(Long postId, String userName) {
@@ -35,10 +38,11 @@ public class LikeServiceImpl implements LikeService {
         Post post = postRepository.findByIdOrThrow(postId);
 
         likeRepository.saveOrThrow(user, post);
-        alarmRepository.save(
-            Alarm.builder().user(post.getUser()).type(AlarmType.NEW_LIKE_ON_POST).args(
-                    AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
-                .build());
+        AlarmEvent alarmEvent = AlarmEvent.builder().receiveUserId(post.getUser().getId())
+            .type(AlarmType.NEW_LIKE_ON_POST).args(
+                AlarmArgs.builder().fromUserId(user.getId()).targetId(post.getId()).build())
+            .build();
+        alarmProducer.send(alarmEvent);
     }
 
     @Override

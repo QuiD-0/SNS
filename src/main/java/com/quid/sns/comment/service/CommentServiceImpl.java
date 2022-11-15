@@ -1,6 +1,5 @@
 package com.quid.sns.comment.service;
 
-import com.quid.sns.alarm.Alarm;
 import com.quid.sns.alarm.model.AlarmArgs;
 import com.quid.sns.alarm.model.AlarmType;
 import com.quid.sns.alarm.repository.AlarmRepository;
@@ -10,6 +9,8 @@ import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.repository.CommentRepository;
 import com.quid.sns.common.RestPage;
+import com.quid.sns.kafka.model.AlarmEvent;
+import com.quid.sns.kafka.producer.AlarmProducer;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;
 import com.quid.sns.user.User;
@@ -33,6 +34,8 @@ public class CommentServiceImpl implements CommentService {
 
     private final AlarmRepository alarmRepository;
 
+    private final AlarmProducer alarmProducer;
+
     @Override
     @Transactional
     public void createComment(CommentCreateRequest request, Long userId, Pageable pageable) {
@@ -40,10 +43,11 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.saveById(request.getPostId(), userId, request.getContent());
 
-        alarmRepository.save(
-            Alarm.builder().user(post.getUser()).type(AlarmType.NEW_COMMENT_ON_POST).args(
-                    AlarmArgs.builder().fromUserId(userId).targetId(post.getId()).build())
-                .build());
+        AlarmEvent alarmEvent = AlarmEvent.builder().receiveUserId(post.getUser().getId())
+            .type(AlarmType.NEW_COMMENT_ON_POST).args(
+                AlarmArgs.builder().fromUserId(userId).targetId(post.getId()).build())
+            .build();
+        alarmProducer.send(alarmEvent);
 
     }
 
