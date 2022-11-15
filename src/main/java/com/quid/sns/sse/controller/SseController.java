@@ -21,7 +21,7 @@ public class SseController {
     @GetMapping("/subscribe")
     public SseEmitter subscribe(Authentication authentication) throws IOException {
         UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
-        return sseService.connectAlarm(userDto.getId());
+        return sseService.connectNotification(userDto.getId());
     }
 
 }
