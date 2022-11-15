@@ -17,4 +17,6 @@ public interface CommentRepository {
     void saveById(Long id, Long postId, String content);
 
     Comment findByIdOrThrow(Long commentId);
+
+    Page<Comment> findAllByPostId(Long postId, Pageable pageable);
 }

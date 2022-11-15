@@ -66,4 +66,9 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(commentId);
     }
 
+    @Override
+    public Page<CommentDto> getCommentByPost(Long postId, Pageable pageable) {
+        return commentRepository.findAllByPostId(postId, pageable).map(Comment::toDto);
+    }
+
 }

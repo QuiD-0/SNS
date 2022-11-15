@@ -50,4 +50,9 @@ public class CommentController {
     }
 
 
+    @GetMapping("/post/{postId}")
+    public Page<CommentDto> getCommentByPost(@PathVariable Long postId, Pageable pageable) {
+        return commentService.getCommentByPost(postId, pageable);
+    }
+
 }

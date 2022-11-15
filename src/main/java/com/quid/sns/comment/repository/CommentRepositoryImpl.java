@@ -40,4 +40,9 @@ public class CommentRepositoryImpl implements CommentRepository {
         return commentJpaRepository.findById(commentId)
             .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
     }
+
+    @Override
+    public Page<Comment> findAllByPostId(Long postId, Pageable pageable) {
+        return commentJpaRepository.findAllByPostId(postId, pageable);
+    }
 }

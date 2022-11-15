@@ -25,4 +25,6 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("delete from Comment c where c.id = :commentId")
     void deleteById(@Param("commentId") Long commentId);
+
+    Page<Comment> findAllByPostId(Long postId, Pageable pageable);
 }

@@ -15,4 +15,6 @@ public interface CommentService {
     Page<CommentDto> getCommentByUser(String userName, Pageable pageable);
 
     void deleteComment(Long commentId);
+
+    Page<CommentDto> getCommentByPost(Long postId, Pageable pageable);
 }
