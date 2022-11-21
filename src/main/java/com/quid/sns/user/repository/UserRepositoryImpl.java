@@ -5,8 +5,6 @@ import com.quid.sns.exception.SnsApplicationException;
 import com.quid.sns.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -16,11 +14,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
 
+    private final UserRedisRepository userRedisRepository;
+
     @Override
-    @Cacheable(value = "user", key = "#userName")
     public User findByUserNameOrThrow(String userName) {
-        return userJpaRepository.findByUserName(userName)
-            .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+        return userRedisRepository.getData(userName).orElseGet(() -> {
+            log.info("Cache Miss {}", userName);
+            User user = userJpaRepository.findByUserName(userName)
+                .orElseThrow(() -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
+            userRedisRepository.save(userName, user);
+            return user;
+        });
     }
 
     @Override
@@ -29,7 +33,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    @CacheEvict(value = "user", key = "#userName")
     public void delete(User user) {
         userJpaRepository.delete(user);
     }
