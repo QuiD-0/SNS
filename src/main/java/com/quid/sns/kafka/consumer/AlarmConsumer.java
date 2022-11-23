@@ -1,6 +1,6 @@
 package com.quid.sns.kafka.consumer;
 
-import com.quid.sns.kafka.model.AlarmEvent;
+import com.quid.sns.kafka.event.AlarmEvent;
 import com.quid.sns.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

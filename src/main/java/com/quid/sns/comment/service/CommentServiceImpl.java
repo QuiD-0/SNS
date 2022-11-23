@@ -9,7 +9,7 @@ import com.quid.sns.comment.model.CommentDto;
 import com.quid.sns.comment.model.CommentUpdateRequest;
 import com.quid.sns.comment.repository.CommentRepository;
 import com.quid.sns.common.RestPage;
-import com.quid.sns.kafka.model.AlarmEvent;
+import com.quid.sns.kafka.event.AlarmEvent;
 import com.quid.sns.kafka.producer.AlarmProducer;
 import com.quid.sns.post.Post;
 import com.quid.sns.post.repository.PostRepository;

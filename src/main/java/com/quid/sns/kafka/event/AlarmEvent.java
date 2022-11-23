@@ -1,4 +1,4 @@
-package com.quid.sns.kafka.model;
+package com.quid.sns.kafka.event;
 
 import com.quid.sns.alarm.model.AlarmArgs;
 import com.quid.sns.alarm.model.AlarmType;

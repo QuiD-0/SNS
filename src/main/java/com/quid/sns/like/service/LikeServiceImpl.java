@@ -3,7 +3,7 @@ package com.quid.sns.like.service;
 import com.quid.sns.alarm.model.AlarmArgs;
 import com.quid.sns.alarm.model.AlarmType;
 import com.quid.sns.alarm.repository.AlarmRepository;
-import com.quid.sns.kafka.model.AlarmEvent;
+import com.quid.sns.kafka.event.AlarmEvent;
 import com.quid.sns.kafka.producer.AlarmProducer;
 import com.quid.sns.like.repository.LikesRepository;
 import com.quid.sns.post.Post;
