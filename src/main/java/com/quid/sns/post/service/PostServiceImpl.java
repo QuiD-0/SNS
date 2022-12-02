@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
         if (!user.equals(post.getUser())) {
             throw new SnsApplicationException(ErrorCode.USER_NOT_MATCHED);
         }
-        post.updatePost(request.getTitle(), request.getBody());
+        post.updatePost(request.title(), request.body());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "postByUser", key = "#user.id, #pageable.pageNumber, #pageable.pageSize")
+    @Cacheable(value = "postByUser", key = "{#user.id, #pageable.pageNumber, #pageable.pageSize}")
     public Page<PostDto> myFeed(Pageable pageable, String userName) {
         User user = userRepository.findByUserNameOrThrow(userName);
         return new RestPage(postRepository.findByUser(user, pageable).map(Post::toDto));

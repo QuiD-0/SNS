@@ -18,7 +18,7 @@ public class AlarmConsumer {
     @KafkaListener(topics = "alarm")
     public void consumeAlarmEvent(AlarmEvent event, Acknowledgment ack) {
         log.info("AlarmEvent consumed from kafka topic: {}", event);
-        sseService.send(event.getType(), event.getArgs(), event.getReceiveUserId());
+        sseService.send(event.type(), event.args(), event.receiveUserId());
         ack.acknowledge();
     }
 }

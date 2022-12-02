@@ -2,7 +2,6 @@ package com.quid.sns.comment.service;
 
 import com.quid.sns.alarm.model.AlarmArgs;
 import com.quid.sns.alarm.model.AlarmType;
-import com.quid.sns.alarm.repository.AlarmRepository;
 import com.quid.sns.comment.Comment;
 import com.quid.sns.comment.model.CommentCreateRequest;
 import com.quid.sns.comment.model.CommentDto;
@@ -32,16 +31,14 @@ public class CommentServiceImpl implements CommentService {
 
     private final PostRepository postRepository;
 
-    private final AlarmRepository alarmRepository;
-
     private final AlarmProducer alarmProducer;
 
     @Override
     @Transactional
     public void createComment(CommentCreateRequest request, Long userId, Pageable pageable) {
-        Post post = postRepository.findByIdOrThrow(request.getPostId());
+        Post post = postRepository.findByIdOrThrow(request.postId());
 
-        commentRepository.saveById(request.getPostId(), userId, request.getContent());
+        commentRepository.saveById(request.postId(), userId, request.content());
 
         AlarmEvent alarmEvent = AlarmEvent.builder().receiveUserId(post.getUser().getId())
             .type(AlarmType.NEW_COMMENT_ON_POST).args(
@@ -56,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
     public void updateComment(CommentUpdateRequest request, String name, Long commentId) {
         Comment comment = commentRepository.findByIdOrThrow(commentId);
 
-        comment.updateComment(request.getContent());
+        comment.updateComment(request.content());
     }
 
     @Override

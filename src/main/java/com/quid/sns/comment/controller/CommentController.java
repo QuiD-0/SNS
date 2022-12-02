@@ -30,7 +30,7 @@ public class CommentController {
     public void createComment(@RequestBody CommentCreateRequest request,
         Authentication authentication, Pageable pageable) {
         UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
-        commentService.createComment(request, userDto.getId(), pageable);
+        commentService.createComment(request, userDto.id(), pageable);
     }
 
     @PutMapping("/{commentId}")

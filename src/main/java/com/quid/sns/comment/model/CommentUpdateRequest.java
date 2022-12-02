@@ -1,9 +1,10 @@
 package com.quid.sns.comment.model;
 
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-public class CommentUpdateRequest {
+@Builder
+public record CommentUpdateRequest(
+    String content
+) {
 
-    private String content;
 }

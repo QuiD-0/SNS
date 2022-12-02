@@ -32,7 +32,7 @@ public class PostController {
     @PostMapping
     public Response<Void> create(@RequestBody PostCreateRequest request,
         Authentication authentication) {
-        postService.create(request.getTitle(), request.getBody(), authentication.getName());
+        postService.create(request.title(), request.body(), authentication.getName());
         return Response.success();
     }
 
@@ -69,7 +69,7 @@ public class PostController {
     public Response<Void> delete(@PathVariable(name = "pk") Long id,
         Authentication authentication) {
         UserDto userDto = getUserDto(authentication);
-        postService.delete(id, userDto.getId());
+        postService.delete(id, userDto.id());
         return Response.success();
     }
 }

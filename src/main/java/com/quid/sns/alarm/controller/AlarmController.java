@@ -23,7 +23,7 @@ public class AlarmController {
     @GetMapping
     public Response<Page<AlarmDto>> getAlarmList(Authentication authentication, Pageable pageable) {
         UserDto userDto = ClassUtils.castInstance(authentication.getPrincipal(), UserDto.class);
-        return Response.success(alarmService.getAlarmList(userDto.getId(), pageable));
+        return Response.success(alarmService.getAlarmList(userDto.id(), pageable));
     }
 
 }

@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto join(UserJoinRequest request) {
-        userRepository.checkUserExist(request.getName());
+        userRepository.checkUserExist(request.name());
 
-        User user = User.builder().username(request.getName())
-            .password(encoder.encode(request.getPassword())).build();
+        User user = User.builder().username(request.name())
+            .password(encoder.encode(request.password())).build();
         userRepository.save(user);
 
         return user.toUserDto();
@@ -40,9 +40,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserLoginResponse login(UserLoginRequest request) {
-        User user = userRepository.findByUserNameOrThrow(request.getName());
+        User user = userRepository.findByUserNameOrThrow(request.name());
 
-        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+        if (!encoder.matches(request.password(), user.getPassword())) {
             throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
         }
         return UserLoginResponse.builder()

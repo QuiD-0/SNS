@@ -16,7 +16,7 @@ public class AlarmProducer {
     private String topic = "alarm";
 
     public void send(AlarmEvent event) {
-        kafkaTemplate.send(topic, event.getReceiveUserId(), event);
+        kafkaTemplate.send(topic, event.receiveUserId(), event);
         log.info("AlarmEvent sent to kafka topic: {}", event);
     }
 

@@ -1,18 +1,11 @@
 package com.quid.sns.post.model;
 
 import lombok.Builder;
-import lombok.Data;
 
-@Data
-public class PostModifyRequest {
+@Builder
+public record PostModifyRequest(
+    String title,
+    String body
+) {
 
-    private String title;
-
-    private String body;
-
-    @Builder
-    public PostModifyRequest(String title, String body) {
-        this.title = title;
-        this.body = body;
-    }
 }
