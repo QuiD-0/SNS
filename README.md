@@ -1,4 +1,4 @@
-# 간단한 SNS 서비스입니다.
+# 간단한 SNS API 서비스입니다.
 
 ```bash
 ├── src.main.java.com.quid.sns
